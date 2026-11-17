@@ -265,10 +265,10 @@ window.DT4N1.en.act = {
   progreso: (n, t) => `${n} of ${t} done`, borrar: 'Clear my ticks', confirmar: 'Sure? Press again to clear.'
 };
 window.DT4N1.en.rub = {
-  intro: 'This is how this level is assessed. Each indicator is scored from 0 to 10. Each criterion’s mark is the average of its indicators, and the level mark is the average of the four criteria.',
+  intro: 'This is how this level is assessed. Each indicator is scored from 1 to 10. Each criterion’s mark is the average of its indicators, and the level mark is the average of the four criteria.',
   criteriosT: 'Assessment criteria',
   criterios: [['1.1', 'Recognise different types of geometric structures, forms and relationships in nature, the environment, art and design.'], ['2.1', 'Analyse the internal geometry of two-dimensional forms through freehand sketches and drafts.'], ['2.2', 'Draw polygonal and curved geometric forms, solve basic tangencies and geometric transformations.'], ['2.3', 'Present work neatly and precisely, both freehand and in geometric construction.']],
-  niveles: ['Insufficient (0–4)', 'Pass (5)', 'Good (6)', 'Very good (7–8)', 'Excellent (9–10)'],
+  niveles: ['Insufficient (1–4)', 'Pass (5)', 'Good (6)', 'Very good (7–8)', 'Excellent (9–10)'],
   criterio: 'Criterion',
   bloques: [
     ['Block 1. Golden carton design', [

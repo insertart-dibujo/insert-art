@@ -265,10 +265,10 @@ window.DT4N1.fr.act = {
   progreso: (n, t) => `${n} sur ${t}`, borrar: 'Effacer mes coches', confirmar: 'Sûr ? Appuie encore pour effacer.'
 };
 window.DT4N1.fr.rub = {
-  intro: 'Voici comment ce niveau est évalué. Chaque indicateur est noté de 0 à 10. La note de chaque critère est la moyenne de ses indicateurs et la note du niveau est la moyenne des quatre critères.',
+  intro: 'Voici comment ce niveau est évalué. Chaque indicateur est noté de 1 à 10. La note de chaque critère est la moyenne de ses indicateurs et la note du niveau est la moyenne des quatre critères.',
   criteriosT: 'Critères d’évaluation',
   criterios: [['1.1', 'Reconnaître différents types de structures, formes et relations géométriques dans la nature, l’environnement, l’art et le design.'], ['2.1', 'Analyser par des esquisses et des croquis à main levée la géométrie interne des formes à deux dimensions.'], ['2.2', 'Dessiner des formes géométriques polygonales et courbes, résoudre des tangences de base et des transformations géométriques.'], ['2.3', 'Présenter le travail avec soin et précision, à main levée comme dans le tracé géométrique.']],
-  niveles: ['Insuffisant (0–4)', 'Passable (5)', 'Assez bien (6)', 'Bien (7–8)', 'Excellent (9–10)'],
+  niveles: ['Insuffisant (1–4)', 'Passable (5)', 'Assez bien (6)', 'Bien (7–8)', 'Excellent (9–10)'],
   criterio: 'Critère',
   bloques: [
     ['Bloc 1. Dessin de l’emballage d’or', [

@@ -670,10 +670,10 @@
 
   /* =============== RÚBRICA (la misma que la hoja de notas) =============== */
   const RUB_ES = {
-    intro: 'Así se evalúa este nivel. Cada indicador se puntúa de 0 a 10. La nota de cada criterio es la media de sus indicadores y la nota del nivel es la media de los cuatro criterios.',
+    intro: 'Así se evalúa este nivel. Cada indicador se puntúa de 1 a 10. La nota de cada criterio es la media de sus indicadores y la nota del nivel es la media de los cuatro criterios.',
     criteriosT: 'Criterios de evaluación',
     criterios: [['1.1', 'Reconocer diferentes tipos de estructuras, formas y relaciones geométricas en la naturaleza, el entorno, el arte y el diseño.'], ['2.1', 'Analizar mediante la realización de bocetos y croquis a mano alzada la geometría interna de formas bidimensionales.'], ['2.2', 'Dibujar formas geométricas poligonales y curvilíneas, resolver tangencias básicas y transformaciones geométricas.'], ['2.3', 'Presentar el trabajo realizado con limpieza y precisión en el trazado, tanto a mano alzada como en el trazado geométrico.']],
-    niveles: ['Insuficiente (0–4)', 'Suficiente (5)', 'Bien (6)', 'Notable (7–8)', 'Sobresaliente (9–10)'],
+    niveles: ['Insuficiente (1–4)', 'Suficiente (5)', 'Bien (6)', 'Notable (7–8)', 'Sobresaliente (9–10)'],
     criterio: 'Criterio',
     bloques: [
       ['Bloque 1. Diseño del envase áureo', [
