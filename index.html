@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>INSERT ART</title>
+<link rel="stylesheet" href="css/fonts.css">
+<style>
+:root{
+  --asfalto:#141218;
+  --hormigon:#24222b;
+  --acero:#3a3742;
+  --tiza:#f3efe6;
+  --rosa:#ff5ad8;
+  --fucsia:#ff1a6e;
+  --fluor:#e8ff2a;
+  --marker:'Permanent Marker','Caveat',cursive;
+  --pixel:'Press Start 2P',monospace;
+  --body:'Rubik',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--asfalto);
+  color:var(--tiza);
+  font-family:var(--body);
+  font-size:17px;line-height:1.55;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+/* Muro de hormigón: ruido + juntas de encofrado */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    linear-gradient(rgba(0,0,0,.35) 2px,transparent 2px) 0 0/100% 180px,
+    linear-gradient(90deg,rgba(0,0,0,.28) 2px,transparent 2px) 0 0/320px 100%,
+    radial-gradient(ellipse at 50% -10%,#2c2733 0%,var(--asfalto) 65%);
+}
+/* Scanlines CRT */
+body::after{
+  content:"";position:fixed;inset:0;z-index:50;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px);
+  mix-blend-mode:multiply;
+}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:3px solid var(--fluor);outline-offset:4px}
+
+/* ---------- HUD superior ---------- */
+.hud{
+  position:sticky;top:0;z-index:40;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px clamp(14px,4vw,40px);
+  font-family:var(--pixel);font-size:10px;letter-spacing:.06em;
+  background:linear-gradient(#0c0b0f,#0c0b0fcc);
+  border-bottom:6px solid transparent;
+  border-image:repeating-linear-gradient(-45deg,var(--fluor) 0 12px,#0c0b0f 12px 24px) 6;
+}
+.hud .brand{font-family:var(--marker);font-size:20px;letter-spacing:0;color:var(--rosa);text-shadow:0 0 8px var(--rosa);text-decoration:none}
+.hud .brand span{color:var(--fluor);text-shadow:0 0 8px var(--fluor)}
+.hud .credits{color:var(--fluor)}
+.hud .credits b{color:var(--rosa);font-weight:400}
+.hud nav{display:flex;gap:16px}
+.hud nav a{text-decoration:none;color:var(--tiza);opacity:.75}
+.hud nav a:hover,.hud nav a[aria-current]{opacity:1;color:var(--fluor)}
+@media (max-width:640px){.hud .credits{display:none}.hud nav{gap:10px}}
+
+main{min-height:calc(100vh - 60px)}
+.view{display:none}
+.view.on{display:block}
+.view.start.on{display:grid}
+
+/* ---------- Neón pintado a mano ---------- */
+.neon-rosa{color:#ffd1f4;text-shadow:0 0 2px #fff,0 0 8px var(--rosa),0 0 22px var(--rosa),0 0 46px var(--rosa)}
+.neon-fucsia{color:#ffc2d8;text-shadow:0 0 2px #fff,0 0 8px var(--fucsia),0 0 22px var(--fucsia),0 0 46px var(--fucsia)}
+.neon-fluor{color:#f8ffc4;text-shadow:0 0 2px #fff,0 0 8px var(--fluor),0 0 22px var(--fluor),0 0 46px #b6d400}
+@keyframes flicker{0%,19%,21%,23%,55%,57%,100%{opacity:1}20%,22%,56%{opacity:.35}}
+
+/* ---------- PANTALLA START ---------- */
+.start{
+  position:relative;min-height:calc(100vh - 60px);
+  place-items:center;text-align:center;
+  padding:40px 20px 90px;overflow:hidden;
+}
+.logo{position:relative;display:inline-block;transform:rotate(-4deg)}
+.logo .l1{
+  display:block;font-family:var(--marker);
+  font-size:clamp(46px,10vw,118px);line-height:.9;
+}
+.logo .l2{
+  display:block;font-family:var(--marker);
+  font-size:clamp(110px,26vw,300px);line-height:.82;margin-top:-.04em;
+  animation:flicker 6s infinite 2s;
+}
+.logo svg.drips{position:absolute;left:8%;right:8%;bottom:-48px;width:84%;height:70px;overflow:visible}
+.coin{
+  position:absolute;right:-30px;top:-14px;width:64px;height:64px;border-radius:50%;
+  border:4px solid var(--fluor);box-shadow:0 0 14px var(--fluor),inset 0 0 12px var(--fluor);
+  display:grid;place-items:center;font-family:var(--pixel);font-size:14px;color:var(--fluor);
+  transform:rotate(18deg);
+}
+.press{
+  margin:80px auto 0;display:table;
+  font-family:var(--pixel);font-size:clamp(12px,2.4vw,18px);
+  color:var(--fluor);padding:18px 26px;
+  border:3px solid var(--fluor);box-shadow:0 0 0 6px var(--asfalto),0 0 0 9px var(--fucsia),0 0 30px #ff1a6e88;
+  animation:blink 1.1s steps(2,start) infinite;
+  text-decoration:none;
+}
+.press:hover{animation:none;background:var(--fluor);color:var(--asfalto)}
+@keyframes blink{to{visibility:hidden}}
+.start .lema{
+  margin-top:26px;font-size:15px;opacity:.7;max-width:46ch;margin-inline:auto
+}
+.start .foot{
+  position:absolute;bottom:22px;left:0;right:0;
+  font-family:var(--pixel);font-size:9px;opacity:.55;line-height:2
+}
+/* grafitis de fondo */
+.scrawl{position:absolute;pointer-events:none;opacity:.9}
+.scrawl.a{left:4%;top:12%;width:150px;transform:rotate(-12deg)}
+.scrawl.b{right:6%;bottom:16%;width:170px;transform:rotate(8deg)}
+.scrawl.c{left:7%;bottom:12%;width:110px}
+.mascot{position:absolute;right:8%;top:14%;width:120px;transform:rotate(9deg)}
+.mascot .slot-note,.slot-note{
+  font-family:var(--pixel);font-size:7px;color:var(--rosa);opacity:.8;margin-top:6px;display:block
+}
+@media (max-width:760px){.scrawl.a,.scrawl.b{display:none}.mascot{width:74px;top:auto;bottom:90px;right:6%}.coin{width:48px;height:48px;font-size:11px;right:-14px}}
+
+/* ---------- SELECCIÓN DE MUNDO ---------- */
+.stage{padding:40px clamp(16px,4vw,48px) 80px;max-width:1280px;margin:0 auto}
+.stage-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:18px;margin-bottom:44px}
+.stage-head h1{font-family:var(--marker);font-size:clamp(38px,6vw,72px);line-height:1;font-weight:400;transform:rotate(-2deg)}
+.stage-head p{max-width:40ch;opacity:.8}
+.wire{
+  position:relative;height:0;border-top:2px solid #6b6772;margin:0 -48px 0;
+  box-shadow:0 1px 0 #000;
+}
+.posters{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:46px 30px;padding-top:30px;
+}
+.poster{
+  --c:var(--rosa);--rot:-3deg;--d:0s;--t:5.5s;
+  position:relative;display:block;text-align:left;
+  aspect-ratio:3/4.2;padding:22px 18px 18px;
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"),
+    #1d1a22;
+  border:3px solid var(--c);
+  box-shadow:0 0 0 1px #000,0 0 22px color-mix(in srgb,var(--c) 55%,transparent),inset 0 0 26px color-mix(in srgb,var(--c) 22%,transparent),0 30px 40px -18px #000;
+  transform-origin:50% -28px;
+  animation:sway var(--t) ease-in-out infinite var(--d);
+  transition:box-shadow .25s;
+  color:var(--tiza);text-decoration:none;
+}
+/* cuerdas de las que cuelga el cartel */
+.poster::before,.poster::after{
+  content:"";position:absolute;top:-30px;width:2px;height:32px;background:#8a8592
+}
+.poster::before{left:22%;transform:rotate(14deg)}
+.poster::after{right:22%;transform:rotate(-14deg)}
+@keyframes sway{
+  0%,100%{transform:rotate(var(--rot)) translateY(0)}
+  50%{transform:rotate(calc(var(--rot) * -1)) translateY(-10px)}
+}
+.poster:hover{animation-play-state:paused;box-shadow:0 0 0 1px #000,0 0 44px var(--c),inset 0 0 40px color-mix(in srgb,var(--c) 40%,transparent),0 30px 40px -18px #000}
+.poster .lvl{font-family:var(--pixel);font-size:9px;color:var(--c);display:block}
+.poster .name{
+  display:block;font-family:var(--marker);font-weight:400;
+  font-size:clamp(34px,4.4vw,46px);line-height:.95;margin-top:14px;
+  color:var(--c);text-shadow:0 0 14px var(--c);
+}
+.poster .course{display:block;font-family:var(--pixel);font-size:11px;margin-top:12px;color:var(--tiza)}
+.poster .full{display:block;margin-top:14px;font-size:14px;opacity:.75;line-height:1.35}
+.poster .meter{position:absolute;left:18px;right:18px;bottom:18px}
+.poster .meter small{font-family:var(--pixel);font-size:8px;opacity:.75;display:flex;justify-content:space-between}
+.bar{display:block;height:10px;margin-top:8px;border:2px solid var(--c);padding:1px}
+.bar i{display:block;height:100%;background:repeating-linear-gradient(90deg,var(--c) 0 6px,transparent 6px 8px)}
+.poster .meter{display:block}
+@media (max-width:560px){
+  .posters{grid-template-columns:repeat(2,1fr);gap:40px 16px}
+  .poster{padding:16px 12px 12px}
+  .poster .name{font-size:28px;margin-top:8px}
+  .poster .full{font-size:12px}
+  .poster .meter{left:12px;right:12px;bottom:12px}
+}
+.poster.launch{animation:launch .6s cubic-bezier(.5,-0.4,.7,1) forwards}
+@keyframes launch{
+  0%{transform:rotate(var(--rot))}
+  35%{transform:rotate(-14deg) scale(1.08) translateY(-20px)}
+  100%{transform:rotate(380deg) scale(2.6);opacity:0}
+}
+.flash{position:fixed;inset:0;z-index:60;pointer-events:none;background:#fff;opacity:0}
+.flash.go{animation:flash .5s ease-out}
+@keyframes flash{0%{opacity:0}30%{opacity:.85}100%{opacity:0}}
+
+.manual-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  font-family:var(--pixel);font-size:11px;color:var(--asfalto);
+  background:var(--fluor);padding:16px 18px;
+  box-shadow:6px 6px 0 var(--fucsia);text-decoration:none;
+}
+.manual-btn:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--fucsia)}
+
+/* ---------- MUNDO (materia) ---------- */
+.world-head{
+  position:relative;padding:44px clamp(16px,4vw,48px) 30px;max-width:1280px;margin:0 auto;
+}
+.back{font-family:var(--pixel);font-size:10px;text-decoration:none;opacity:.75}
+.back:hover{opacity:1;color:var(--fluor)}
+.world-head h1{
+  font-family:var(--marker);font-weight:400;
+  font-size:clamp(46px,8vw,104px);line-height:.95;margin-top:18px;
+  color:var(--c);text-shadow:0 0 18px var(--c),0 0 46px var(--c);
+  transform:rotate(-2deg);transform-origin:left;
+}
+.world-head .sub{font-family:var(--pixel);font-size:12px;margin-top:20px;line-height:1.9}
+.world-head .desc{max-width:62ch;margin-top:14px;opacity:.8}
+
+.tabs{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding:0 clamp(16px,4vw,48px);max-width:1280px;margin:0 auto;
+}
+.tab{
+  font-family:var(--pixel);font-size:10px;padding:14px 16px;
+  border:2px solid var(--acero);background:#0e0d12;opacity:.8;
+}
+.tab:hover{opacity:1;border-color:var(--c)}
+.tab[aria-selected="true"]{opacity:1;background:var(--c);color:var(--asfalto);border-color:var(--c);box-shadow:0 0 18px var(--c)}
+.panel-wrap{padding:26px clamp(16px,4vw,48px) 90px;max-width:1280px;margin:0 auto}
+
+/* mapa de niveles */
+.term{margin-bottom:40px}
+.term h2{
+  font-family:var(--pixel);font-size:12px;font-weight:400;
+  display:flex;align-items:center;gap:14px;margin-bottom:18px;color:var(--c)
+}
+.term h2::after{content:"";flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--c) 0 8px,transparent 8px 14px);opacity:.6}
+.levels{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.level{
+  position:relative;display:block;text-decoration:none;
+  padding:18px 18px 16px;background:#17151c;
+  border:2px solid var(--acero);
+  clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));
+  transition:border-color .2s,background .2s;
+}
+.level:hover{border-color:var(--c);background:#1f1c25}
+.level .num{font-family:var(--pixel);font-size:9px;opacity:.7}
+.level .t{display:block;font-family:var(--marker);font-size:25px;line-height:1.08;margin:10px 0 12px}
+.level .dates{font-size:13px;opacity:.7}
+.chip{
+  display:inline-block;margin-top:12px;font-family:var(--pixel);font-size:8px;padding:6px 8px;
+  border:2px solid currentColor;
+}
+.st-done .chip{color:#8f8b98}
+.st-done .t{color:#c9c5cf}
+.st-live{border-color:var(--c)}
+.st-live .chip{color:var(--asfalto);background:var(--c);border-color:var(--c);animation:pulse 1.4s ease-in-out infinite}
+.st-live .t{color:var(--c);text-shadow:0 0 12px var(--c)}
+@keyframes pulse{50%{box-shadow:0 0 16px var(--c)}}
+.st-locked{opacity:.55}
+.st-locked .chip{color:var(--tiza)}
+
+/* zona en obras (vacío) */
+.obras{
+  border:3px dashed var(--acero);padding:46px 24px;text-align:center;
+  background:repeating-linear-gradient(-45deg,transparent 0 22px,rgba(232,255,42,.035) 22px 44px);
+}
+.obras .cone{width:58px;height:58px;margin:0 auto 18px}
+.obras h3{font-family:var(--marker);font-weight:400;font-size:30px;color:var(--fluor);text-shadow:0 0 10px #b6d40099}
+.obras p{max-width:48ch;margin:10px auto 0;opacity:.75}
+
+/* ---------- NIVEL ---------- */
+.level-head{padding:40px clamp(16px,4vw,48px) 26px;max-width:1280px;margin:0 auto;position:relative}
+.level-head .big{
+  font-family:var(--pixel);font-size:clamp(14px,2vw,18px);color:var(--c);margin-top:20px;display:block
+}
+.level-head h1{
+  font-family:var(--marker);font-weight:400;
+  font-size:clamp(40px,6.6vw,84px);line-height:1;margin-top:14px;max-width:18ch;
+  color:#fff;text-shadow:0 0 2px #fff,0 0 14px var(--c),0 0 36px var(--c);
+}
+.level-head .meta{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:20px;font-size:15px;opacity:.85}
+.level-nav{display:flex;justify-content:space-between;gap:12px;margin-top:34px}
+.level-nav a{font-family:var(--pixel);font-size:9px;text-decoration:none;padding:12px 14px;border:2px solid var(--acero)}
+.level-nav a:hover{border-color:var(--c);color:var(--c)}
+.level-nav .ghost{visibility:hidden}
+
+/* ---------- MANUAL DEL JUGADOR ---------- */
+.manual{--c:var(--fluor)}
+
+
+/* ---------- PERSONAJES ---------- */
+.crew{position:absolute;left:0;right:0;bottom:58px;display:flex;justify-content:center;align-items:flex-end;gap:clamp(4px,2vw,26px);pointer-events:none}
+.crew img{height:clamp(70px,13vh,130px);width:auto;filter:drop-shadow(0 8px 10px #000);animation:hop 2.4s ease-in-out infinite}
+.crew img:nth-child(2){animation-delay:-.5s}.crew img:nth-child(3){animation-delay:-1s}
+.crew img:nth-child(4){animation-delay:-1.5s}.crew img:nth-child(5){animation-delay:-2s}
+@keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px) rotate(-2deg)}}
+.start{padding-top:24px;padding-bottom:200px}
+@media (max-width:560px){.crew img{height:58px}.crew{gap:2px;bottom:70px}.start{padding-bottom:150px}}
+.poster .pj{position:absolute;right:-14px;bottom:-30px;width:46%;max-width:130px;filter:drop-shadow(0 6px 8px #000);transform:rotate(6deg);transition:transform .25s}
+.poster:hover .pj{transform:rotate(-4deg) translateY(-10px) scale(1.08)}
+.poster .meter{right:44%}
+.world-head{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:clamp(12px,4vw,48px);align-items:end}
+.world-head > :not(.pj){grid-column:1}
+.world-head .pj{grid-column:2;grid-row:1 / span 5;align-self:end;height:min(220px,24vw);filter:drop-shadow(0 10px 14px #000);animation:hop 3s ease-in-out infinite}
+.level-head .pj{position:absolute;right:clamp(16px,5vw,70px);top:30px;height:min(200px,26vw);filter:drop-shadow(0 10px 14px #000);transform:rotate(5deg)}
+.obras .pj-mini{height:110px;display:block;margin:0 auto 14px;filter:drop-shadow(0 6px 8px #000);transform:rotate(-6deg)}
+@media (max-width:560px){.poster .pj{width:36%;right:-10px;bottom:-34px}.poster .meter{right:40%}.world-head .pj{height:120px;align-self:start;margin-top:24px}.level-head .pj{display:none}}
+
+.sfx{font-size:16px;padding:4px 8px;border:2px solid var(--acero);line-height:1}
+.sfx[aria-pressed=false]{opacity:.6}
+.langs{display:flex;gap:0;border:2px solid var(--acero)}
+.langs button{font-family:var(--pixel);font-size:9px;padding:8px 9px;color:var(--tiza);opacity:.7}
+.langs button:hover{opacity:1;color:var(--fluor)}
+.langs button[aria-pressed=true]{background:var(--fluor);color:var(--asfalto);opacity:1}
+.aviso-trad{font-size:14px;opacity:.75;border:1px dashed var(--acero);padding:8px 12px;margin-bottom:16px;max-width:70ch}
+@media (max-width:640px){.hud{flex-wrap:wrap;row-gap:8px}.hud .brand{font-size:18px}.langs button{padding:7px 7px}}
+
+/* ---------- TEORÍA ---------- */
+.teoria{display:grid;grid-template-columns:230px minmax(0,1fr);gap:40px;align-items:start}
+.toc{position:sticky;top:84px;display:flex;flex-direction:column;gap:4px;padding:16px;background:#100f14;border:2px solid var(--acero)}
+.toc-t{font-family:var(--pixel);font-size:9px;color:var(--c);margin-bottom:8px}
+.toc button{text-align:left;font-size:14px;line-height:1.3;padding:7px 8px;border-left:3px solid transparent;opacity:.8}
+.toc button span{font-family:var(--pixel);font-size:8px;color:var(--c);margin-right:8px}
+.toc button:hover{opacity:1;border-left-color:var(--c);background:#1b1921}
+.doc{max-width:820px}
+.tsec{padding:8px 0 46px;scroll-margin-top:90px;border-bottom:2px dashed #2f2c36;margin-bottom:40px}
+.tsec h2{font-family:var(--marker);font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1.1;color:var(--c);text-shadow:0 0 14px color-mix(in srgb,var(--c) 60%,transparent);margin-bottom:20px;display:flex;gap:14px;align-items:baseline}
+.tsec h2 .sn{font-family:var(--pixel);font-size:12px;color:var(--rosa);text-shadow:none}
+.tsec h3{font-size:22px;font-weight:700;margin:30px 0 10px;color:#fff}
+.tsec p,.tsec li{max-width:68ch}
+.tsec p{margin:0 0 14px}
+.tsec ul{margin:0 0 18px 22px}
+.tsec li{margin-bottom:8px}
+.tsec li::marker{color:var(--rosa)}
+.def{border-left:4px solid var(--rosa);padding:12px 16px;background:#1a1720}
+.tip{border:2px dashed var(--acero);padding:12px 16px;font-size:16px}
+.manual-tip{border:2px solid var(--c);padding:14px 16px;background:color-mix(in srgb,var(--c) 8%,transparent)}
+.manual-tip b{color:var(--c)}
+.formula{display:block;width:max-content;max-width:100%;margin:12px 0 4px;padding:10px 16px;font-weight:700;font-size:19px;letter-spacing:.02em;color:var(--fluor);border:2px solid var(--fluor);background:#16180a;box-shadow:0 0 12px #e8ff2a33}
+ul.cards3{list-style:none;margin:6px 0 10px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:none}
+ul.cards3 li{margin:0;padding:14px;border:2px solid var(--acero);background:#17151c}
+ul.cards3 b{display:block;font-family:var(--marker);font-weight:400;font-size:24px;color:var(--rosa)}
+ul.cards3 span{font-size:15px;opacity:.85}
+.tag{font-family:var(--pixel);font-size:8px;padding:3px 5px;color:var(--asfalto)}
+.tag.t1{background:var(--fluor)}.tag.t2{background:var(--rosa)}.tag.t3{background:#9de7ff}
+
+/* figuras y pizarra */
+.fig,.player{margin:22px 0 26px}
+.geo{display:block;width:100%;height:auto;background:
+  linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/20px 20px,
+  linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/20px 20px,#0f1d1a;
+  border:3px solid #2b2830;box-shadow:inset 0 0 40px #000a}
+.fig figcaption{font-size:14px;opacity:.8;margin-top:8px;line-height:1.6}
+.geo path,.geo ellipse{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.geo .g-aux{stroke:#f3efe6;stroke-opacity:.5;stroke-width:1.4}
+.geo .dash{stroke-dasharray:6 6}
+.geo .g-arc{stroke:var(--rosa);stroke-width:1.8;filter:drop-shadow(0 0 2px var(--rosa))}
+.geo .g-data{stroke:#f3efe6;stroke-width:2.6}
+.geo .g-main{stroke:var(--fluor);stroke-width:2.6;filter:drop-shadow(0 0 3px #e8ff2a99)}
+.geo .g-res{stroke:var(--fucsia);stroke-width:3.6;filter:drop-shadow(0 0 5px var(--fucsia))}
+.geo .g-plane{stroke:#9de7ff;stroke-width:1.6;fill:rgba(157,231,255,.08)}
+.geo .g-pt circle{fill:#f3efe6}
+.geo .g-pt.res circle{fill:var(--fucsia)}
+.geo text{font-family:var(--body);font-size:17px;fill:#f3efe6;font-weight:500}
+.geo .g-pt text{font-weight:700}
+.geo .it{font-style:italic}
+.geo text.res,.geo .g-pt.res text{fill:#ff8ab4}
+.geo .g-cap{font-size:15px;fill:#f3efe6;opacity:.85}
+.geo .g-num{font-family:var(--pixel);font-size:9px;fill:#f3efe6;opacity:.7}
+.geo .g-inf{font-size:44px;fill:var(--fluor)}
+.geo .g-zone{fill:rgba(232,255,42,.04);stroke:#f3efe6;stroke-opacity:.45;stroke-width:1.4;stroke-dasharray:6 6}
+.geo .g-blue{stroke:#5ad1ff;stroke-width:3.4;filter:drop-shadow(0 0 4px #5ad1ff)}
+.geo text.blue{fill:#8fe0ff}
+.geo .g-num.big{font-size:12px;opacity:.55}
+
+/* reproductor */
+.jugada{margin:34px 0;padding:20px;border:2px solid var(--acero);background:#131117}
+.jugada h4{font-family:var(--marker);font-weight:400;font-size:28px;color:#fff;margin-bottom:8px}
+.player .screen{position:relative}
+.player .counter{position:absolute;top:10px;right:12px;font-family:var(--pixel);font-size:9px;color:var(--fluor)}
+.player g.step{display:none}
+.player g.step.on{display:inline}
+.player g.step.current .g-aux{stroke-opacity:.85}
+.player g.step.anim path{stroke-dasharray:1;stroke-dashoffset:1;animation:trazo .9s ease-out forwards}
+.player g.step.anim .g-pt,.player g.step.anim > text{opacity:0;animation:aparece .4s ease-out forwards}
+.player g.step.anim .g-plane{fill-opacity:0}
+@keyframes trazo{to{stroke-dashoffset:0}}
+@keyframes aparece{to{opacity:1}}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.controls button{font-family:var(--pixel);font-size:11px;padding:12px 14px;border:2px solid var(--acero);background:#0e0d12;min-width:46px}
+.controls button:hover{border-color:var(--fluor);color:var(--fluor)}
+.controls .play{background:var(--fluor);color:var(--asfalto);border-color:var(--fluor);flex:1;max-width:220px}
+.controls .play:hover{color:var(--asfalto);box-shadow:0 0 16px var(--fluor)}
+.steps-list{margin:16px 0 0 0!important;padding-left:26px;counter-reset:none}
+.steps-list li{cursor:pointer;opacity:.6;padding:4px 6px;margin:0!important}
+.steps-list li:hover{opacity:.9}
+.steps-list li.done{opacity:.85}
+.steps-list li.cur{opacity:1;background:color-mix(in srgb,var(--fluor) 12%,transparent);outline:1px solid var(--fluor)}
+.steps-list li::marker{font-weight:700;color:var(--fluor)}
+.player .now{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.yt{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:12px 16px;font-weight:700;text-decoration:none;color:#fff;background:#c4102b;box-shadow:4px 4px 0 var(--rosa)}
+.yt:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--rosa)}
+
+.mision{max-width:860px}
+.mision-head{padding:26px;border:3px solid var(--c);background:linear-gradient(135deg,#1a1c0c,#141218 60%);box-shadow:0 0 26px #e8ff2a33;margin-bottom:30px}
+.mision-kicker{font-family:var(--pixel);font-size:10px;color:var(--rosa);margin-bottom:10px}
+.mision-head h2{font-family:var(--marker);font-weight:400;font-size:clamp(34px,5vw,54px);line-height:1.05;color:var(--c);text-shadow:0 0 14px #e8ff2a88;margin-bottom:14px}
+.mision-reto{font-size:18px;max-width:64ch}
+.mision h3{font-family:var(--marker);font-weight:400;font-size:28px;color:#fff;margin:26px 0 14px}
+.fases{list-style:none;display:grid;gap:12px}
+.fases li{display:grid;grid-template-columns:44px 1fr;column-gap:14px;padding:14px;border:2px solid var(--acero);background:#141218}
+.fases .fase-n{grid-row:1 / span 2;display:grid;place-items:center;width:44px;height:44px;font-family:var(--pixel);font-size:14px;background:var(--rosa);color:var(--asfalto)}
+.fases b{font-size:18px}
+.fases li span:last-child{opacity:.85}
+.entregas{margin:0 0 20px 22px}
+.entregas li{margin-bottom:8px;max-width:70ch}
+.entregas li::marker{color:var(--c)}
+
+.act-intro{font-size:18px;max-width:68ch;margin-bottom:22px;padding:14px 18px;border-left:4px solid var(--rosa);background:#1a1720}
+.act-list{list-style:none;display:grid;gap:14px;margin-bottom:40px;max-width:900px}
+.act-list li{display:grid;grid-template-columns:54px 1fr;gap:16px;padding:18px;border:2px solid var(--acero);background:#141218}
+.act-n{display:grid;place-items:center;width:54px;height:54px;font-family:var(--pixel);font-size:18px;background:var(--c);color:var(--asfalto)}
+.act-tag{font-family:var(--pixel);font-size:8px;color:var(--rosa);margin-bottom:6px}
+.act-list h3{font-family:var(--marker);font-weight:400;font-size:26px;margin-bottom:6px}
+.act-list p{max-width:68ch}
+.cotejo{max-width:900px;padding:22px;border:3px solid var(--c);background:#121410;box-shadow:0 0 22px #e8ff2a22}
+.cotejo h2{font-family:var(--marker);font-weight:400;font-size:32px;color:var(--c);margin-bottom:8px}
+.cotejo-p{max-width:68ch;margin-bottom:16px}
+.cotejo-bar{display:flex;align-items:center;gap:14px;margin-bottom:16px;font-family:var(--pixel);font-size:10px}
+.cotejo-bar .bar{flex:1;max-width:340px;border-color:var(--c)}
+.cotejo-bar .bar i{width:0;background:repeating-linear-gradient(90deg,var(--c) 0 6px,transparent 6px 8px);transition:width .3s}
+.cotejo fieldset{border:2px solid var(--acero);padding:12px 16px 8px;margin-bottom:14px}
+.cotejo legend{padding:0 8px;font-weight:700;color:#fff}
+.cotejo label{display:flex;gap:12px;align-items:flex-start;padding:7px 0;cursor:pointer;max-width:70ch}
+.cotejo input{appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--c);margin-top:2px;display:grid;place-items:center;cursor:pointer}
+.cotejo input:checked{background:var(--c);box-shadow:0 0 10px var(--c)}
+.cotejo input:checked::after{content:"✓";color:var(--asfalto);font-weight:900;font-size:15px}
+.cotejo input:checked + span{opacity:.7;text-decoration:line-through;text-decoration-color:var(--rosa)}
+.cotejo-borrar{font-family:var(--pixel);font-size:9px;padding:10px 12px;border:2px solid var(--acero);margin-top:4px}
+.cotejo-borrar:hover{border-color:var(--fucsia);color:var(--fucsia)}
+.crit-list{list-style:none;display:grid;gap:8px;margin-bottom:30px;max-width:900px}
+.crit-list li{display:grid;grid-template-columns:56px 1fr;gap:12px;padding:10px 12px;border:2px solid var(--acero)}
+.crit-list b{font-family:var(--pixel);font-size:12px;color:var(--c);padding-top:3px}
+.il{border:2px solid var(--acero);background:#141218;padding:16px;margin-bottom:16px;max-width:1000px}
+.il header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin-bottom:6px}
+.il-code{font-family:var(--pixel);font-size:10px;color:var(--rosa)}
+.il h3{font-size:20px;font-weight:700}
+.il-crit{font-family:var(--pixel);font-size:8px;padding:4px 6px;border:1px solid var(--c);color:var(--c)}
+.il > p{max-width:75ch;opacity:.9;margin-bottom:12px}
+.lv{list-style:none;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.lv li{padding:10px;font-size:14px;line-height:1.4;background:#0f0e13;border-top:4px solid}
+.lv b{display:block;font-size:12px;margin-bottom:4px}
+.lv .lv0{border-color:#8a8592}.lv .lv1{border-color:#ffb3e6}.lv .lv2{border-color:var(--rosa)}.lv .lv3{border-color:var(--fucsia)}.lv .lv4{border-color:var(--fluor)}
+@media (max-width:820px){.lv{grid-template-columns:1fr}.act-list li{grid-template-columns:1fr}}
+
+/* recursos */
+.rec-h{font-family:var(--marker);font-weight:400;font-size:34px;color:var(--fluor);margin:10px 0 10px}
+.recursos p{max-width:68ch;margin-bottom:16px;opacity:.85}
+.vid-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-bottom:34px}
+.vid-list a{display:flex;align-items:center;gap:12px;padding:14px;border:2px solid var(--acero);background:#141218;text-decoration:none}
+.vid-list a:hover{border-color:var(--fluor)}
+.play-ico{display:grid;place-items:center;width:34px;height:34px;flex:none;background:#c4102b;color:#fff;font-size:12px}
+
+@media (max-width:900px){
+  .teoria{grid-template-columns:1fr;gap:16px}
+  .toc{position:static;flex-direction:row;overflow-x:auto;padding:10px}
+  .toc-t{display:none}
+  .toc button{white-space:nowrap;border-left:0;border-bottom:3px solid transparent}
+  ul.cards3{grid-template-columns:1fr}
+  .jugada{padding:12px;margin:24px -6px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="hud">
+  <a class="brand" href="#">INSERT <span>ART</span></a>
+  <span class="credits"><span data-t="credits">CRÉDITOS</span> <b>∞</b> · 2026/27</span>
+  <nav aria-label="Navegación principal">
+    <a href="#mundos" data-nav="mundos" data-t="materias">Materias</a>
+    <a href="#manual" data-nav="manual" data-t="manual">Manual</a>
+  </nav>
+  <button type="button" id="sfx-toggle" class="sfx" aria-label="Sonido" title="Sonido">🔊</button>
+  <div class="langs" role="group" aria-label="Idioma">
+    <button type="button" data-lang="es" lang="es" title="Español">ES</button><button type="button" data-lang="en" lang="en" title="English">EN</button><button type="button" data-lang="fr" lang="fr" title="Français">FR</button><button type="button" data-lang="ru" lang="ru" title="Русский">RU</button>
+  </div>
+</header>
+
+<main>
+  <!-- START -->
+  <section class="view start" id="v-start" aria-label="Pantalla de inicio">
+    <svg class="scrawl a" viewBox="0 0 150 80" aria-hidden="true">
+      <path d="M8 60 C30 10,60 10,70 40 S110 70,140 18" fill="none" stroke="#ff1a6e" stroke-width="7" stroke-linecap="round" style="filter:drop-shadow(0 0 6px #ff1a6e)"/>
+      <path d="M126 10 l16 8 -12 12" fill="none" stroke="#ff1a6e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <svg class="scrawl b" viewBox="0 0 170 110" aria-hidden="true">
+      <g fill="none" stroke="#e8ff2a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 6px #e8ff2a)">
+        <path d="M20 90 L40 30 L60 70 L85 20 L105 70 L130 30 L150 90 Z"/>
+        <path d="M30 100 L145 100"/>
+      </g>
+    </svg>
+    <svg class="scrawl c" viewBox="0 0 110 110" aria-hidden="true">
+      <g fill="#ff5ad8" style="filter:drop-shadow(0 0 5px #ff5ad8)">
+        <circle cx="55" cy="55" r="9"/><circle cx="22" cy="38" r="4"/><circle cx="88" cy="30" r="5"/>
+        <circle cx="80" cy="84" r="3"/><circle cx="30" cy="80" r="6"/><circle cx="60" cy="18" r="3"/>
+        <circle cx="96" cy="62" r="2.5"/><circle cx="12" cy="62" r="2.5"/>
+      </g>
+    </svg>
+
+    <div>
+      <h1 class="logo">
+        <span class="l1 neon-rosa">INSERT</span>
+        <span class="l2 neon-fluor">ART</span>
+        <span class="coin" aria-hidden="true">1¢</span>
+        <svg class="drips" viewBox="0 0 400 70" preserveAspectRatio="none" aria-hidden="true">
+          <g fill="#e8ff2a" style="filter:drop-shadow(0 0 6px #e8ff2a)">
+            <path d="M40 0 h10 v38 a5 5 0 0 1 -10 0z"/>
+            <path d="M120 0 h8 v58 a4 4 0 0 1 -8 0z"/>
+            <path d="M205 0 h9 v24 a4.5 4.5 0 0 1 -9 0z"/>
+            <path d="M290 0 h8 v46 a4 4 0 0 1 -8 0z"/>
+            <path d="M350 0 h7 v16 a3.5 3.5 0 0 1 -7 0z"/>
+          </g>
+        </svg>
+      </h1>
+      <a class="press" href="#mundos">PRESS START</a>
+      <p class="lema" data-t="tag"></p>
+    </div>
+    <div class="crew" aria-hidden="true">
+      <img src="img/pintora.png" alt=""><img src="img/foto.png" alt=""><img src="img/spray.png" alt=""><img src="img/escuadras.png" alt=""><img src="img/video.png" alt="">
+    </div>
+    <p class="foot"><span data-t="foot1"></span><br><span data-t="foot2"></span></p>
+  </section>
+
+  <!-- SELECCIÓN DE MATERIA -->
+  <section class="view" id="v-mundos" aria-label="Elige tu materia">
+    <div class="stage">
+      <div class="stage-head">
+        <div>
+          <h1 class="neon-fucsia" data-t="elige">Elige tu materia</h1>
+        </div>
+        <a class="manual-btn" href="#manual" data-t="manualBtn">Manual del jugador</a>
+      </div>
+      <div class="wire" aria-hidden="true"></div>
+      <div class="posters" id="posters"></div>
+    </div>
+  </section>
+
+  <!-- MATERIA -->
+  <section class="view" id="v-mundo" aria-live="polite"></section>
+
+  <!-- NIVEL -->
+  <section class="view" id="v-nivel" aria-live="polite"></section>
+
+  <!-- MANUAL DEL JUGADOR -->
+  <section class="view manual" id="v-manual"></section>
+</main>
+
+<div class="flash" id="flash"></div>
+
+<script src="js/i18n.js"></script>
+<script src="js/geo.js"></script>
+<script src="js/sfx.js"></script>
+<script src="contenidos/dt4-n1.js"></script>
+<script src="contenidos/dt4-n1.en.js"></script>
+<script src="contenidos/dt4-n1.fr.js"></script>
+<script src="contenidos/dt4-n1.ru.js"></script>
+<script>
+/* ===================== DATOS (de las temporalizaciones 2026/27) ===================== */
+const MATERIAS = [
+  { id:"epva1", pj:"img/pintora.png", corto:"EPVA", curso:"1.º ESO", grupos:"1.º A · B · C · D", c:"var(--rosa)",
+    nombre:"Educación Plástica, Visual y Audiovisual", cuaderno:"Cuaderno de artista",
+    niveles:[
+      ["Bestiario de cartas",1,"2026-10-01","2026-11-12"],
+      ["Pictogramas del taller",1,"2026-11-18","2026-12-10"],
+      ["Teselas de al-Ándalus",2,"2027-01-07","2027-02-10"],
+      ["Imágenes que se mueven",2,"2027-02-11","2027-03-17"],
+      ["Viñetas de convivencia",3,"2027-03-31","2027-05-06"],
+      ["Museo de 1.º",3,"2027-05-12","2027-06-10"] ]},
+  { id:"pepa2", pj:"img/foto.png", corto:"PEPA", curso:"2.º ESO", grupos:"2.º C/D", c:"var(--fluor)",
+    nombre:"Proyecto de Educación Plástica, Visual y Audiovisual", cuaderno:"Cuaderno de artista",
+    niveles:[
+      ["Cartel 25N: mirar como Javier Jaén",1,"2026-10-02","2026-11-13"],
+      ["Estampas de invierno",1,"2026-11-17","2026-12-18"],
+      ["Luz que dibuja",2,"2027-01-08","2027-01-26"],
+      ["Muro del IES",2,"2027-01-29","2027-02-16"],
+      ["Historias del IES",2,"2027-02-19","2027-03-12"],
+      ["Segunda vida",3,"2027-03-30","2027-05-04"],
+      ["Animamos el IES",3,"2027-05-07","2027-06-15"] ]},
+  { id:"epva3", pj:"img/spray.png", corto:"EPVA", curso:"3.º ESO", grupos:"3.º A · B · C", c:"var(--fucsia)",
+    nombre:"Educación Plástica, Visual y Audiovisual", cuaderno:"Cuaderno de artista",
+    niveles:[
+      ["Un tríptico histórico",1,"2026-10-01","2026-10-30"],
+      ["Puertas imaginarias del IES",1,"2026-11-03","2026-11-27"],
+      ["Color y percepción",1,"2026-11-30","2026-12-21"],
+      ["¿Real o falsa? Leer imágenes",2,"2027-01-07","2027-02-04"],
+      ["Tramas de al-Ándalus",2,"2027-02-05","2027-03-12"],
+      ["Del plano al volumen",3,"2027-03-29","2027-05-04"],
+      ["Miradas en movimiento",3,"2027-05-04","2027-06-15"] ]},
+  { id:"dt4", pj:"img/escuadras.png", corto:"DT", curso:"4.º ESO", grupos:"4.º A", c:"var(--fluor)",
+    nombre:"Dibujo Técnico", cuaderno:"Manual de DT",
+    niveles:[
+      ["Geometría natural: el envase áureo",1,"2026-10-01","2026-11-12"],
+      ["Alicatado nazarí",1,"2026-11-16","2026-11-30"],
+      ["Curvas con marca",1,"2026-12-03","2026-12-21"],
+      ["El espacio en dos planos",2,"2027-01-07","2027-02-01"],
+      ["El IES en perspectiva",2,"2027-02-04","2027-03-18"],
+      ["Ficha técnica",3,"2027-03-29","2027-04-29"],
+      ["Diseña tu IES",3,"2027-05-03","2027-06-24"] ]},
+  { id:"exp4", pj:"img/video.png", corto:"EXP. ART.", curso:"4.º ESO", grupos:"4.º B", c:"var(--rosa)",
+    nombre:"Expresión Artística", cuaderno:"Cuaderno de artista",
+    niveles:[
+      ["Pócimas",1,"2026-10-06","2026-10-28"],
+      ["Humor gráfico",1,"2026-11-03","2026-11-25"],
+      ["Comida ficticia para el hambre creativo",1,"2026-11-25","2026-12-22"],
+      ["Artistas y artesanos",2,"2027-01-12","2027-02-10"],
+      ["Escultura efímera",2,"2027-02-09","2027-03-17"],
+      ["Spot contra los bulos y los estereotipos",3,"2027-03-30","2027-04-21"],
+      ["Muros con voz",3,"2027-04-27","2027-05-05"],
+      ["Vídeo promocional de la ESO",3,"2027-05-25","2027-06-16"] ]}
+];
+const U = () => I18N.ui;
+const nombre = m => I18N.nombre(m);
+const tituloNivel = (m,j) => I18N.nivel(m,j);
+const cuadernoDe = m => m.id==="dt4" ? U().manualDT : U().cuadernoArt;
+const PESTANAS_NIVEL = () => Object.entries(U().tabsNivel);
+const PESTANAS_MATERIA = m => [["mapa",U().tMapa],["material",U().tMaterial],["evaluacion",U().tEval],["cuaderno",cuadernoDe(m)]];
+const PESTANAS_MANUAL = () => Object.entries(U().tabsManual);
+
+/* ===================== UTILIDADES ===================== */
+const $ = s => document.querySelector(s);
+const f = iso => { const d = new Date(iso+"T12:00:00"); return d.getDate()+" "+U().meses[d.getMonth()]; };
+const pad = n => String(n).padStart(2,"0");
+function estado(ini,fin){
+  const hoy = new Date(); hoy.setHours(12,0,0,0);
+  if (hoy > new Date(fin+"T12:00:00")) return ["done",U().st.done];
+  if (hoy >= new Date(ini+"T12:00:00")) return ["live",U().st.live];
+  return ["locked",U().st.locked];
+}
+function progreso(m){
+  const hechos = m.niveles.filter(n => estado(n[2],n[3])[0]==="done").length;
+  return [hechos, m.niveles.length];
+}
+const obras = (que, pj) => `
+  <div class="obras">
+    ${pj ? `<img class="pj-mini" src="${pj}" alt="">` : ""}
+    <svg class="cone" viewBox="0 0 60 60" aria-hidden="true">
+      <path d="M30 4 L48 52 H12 Z" fill="#ff1a6e"/>
+      <path d="M22 26 H38 L41 34 H19 Z M16 40 H44 L46 46 H14 Z" fill="#f3efe6"/>
+      <rect x="6" y="52" width="48" height="6" fill="#3a3742"/>
+    </svg>
+    <h3>${U().obras}</h3>
+    <p>${que}</p>
+  </div>`;
+const aviso = () => U().aviso ? `<p class="aviso-trad">${U().aviso}</p>` : "";
+
+/* textos fijos de la página */
+function pintarFijos(){
+  document.querySelectorAll("[data-t]").forEach(el => { const v = U()[el.dataset.t]; if (typeof v === "string") el.textContent = v; });
+  document.querySelectorAll("[data-lang]").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === I18N.lang));
+  document.querySelector(".langs").setAttribute("aria-label", U().langLabel);
+}
+
+/* ===================== VISTAS ===================== */
+function pintarCarteles(){
+  const rots = ["-3deg","2.5deg","-2deg","3.5deg","-2.6deg"];
+  const ts = ["5.4s","6.2s","5.8s","6.8s","5.1s"];
+  $("#posters").innerHTML = MATERIAS.map((m,i)=>{
+    const [h,t] = progreso(m);
+    return `
+    <a class="poster" href="#${m.id}" data-id="${m.id}"
+       style="--c:${m.c};--rot:${rots[i]};--d:-${i*1.3}s;--t:${ts[i]}">
+      <span class="lvl">${U().mundo} ${pad(i+1)}</span>
+      <span class="name">${m.corto}</span>
+      <span class="course">${m.curso}</span>
+      <span class="full">${nombre(m)}</span>
+      <span class="meter">
+        <small><span>${U().niveles}</span><span>${h}/${t}</span></small>
+        <span class="bar"><i style="width:${Math.max(4,h/t*100)}%"></i></span>
+      </span>
+      <img class="pj" src="${m.pj}" alt="">
+    </a>`;
+  }).join("");
+  document.querySelectorAll(".poster").forEach(p=>{
+    p.addEventListener("click", e=>{
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      e.preventDefault();
+      p.classList.add("launch");
+      $("#flash").classList.remove("go"); void $("#flash").offsetWidth; $("#flash").classList.add("go");
+      setTimeout(()=>{ location.hash = p.dataset.id; }, 520);
+    });
+  });
+}
+
+function tabsHTML(lista, activa, base){
+  return `<div class="tabs" role="tablist">${lista.map(([k,l])=>
+    `<button class="tab" role="tab" data-k="${k}" aria-selected="${k===activa}" data-base="${base}">${l}</button>`).join("")}</div>`;
+}
+function enlazarTabs(cont, render){
+  cont.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
+    cont.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected", x===b));
+    render(b.dataset.k);
+  }));
+}
+let pestanaInicial = null;   /* se conserva la pestaña al cambiar de idioma */
+const tomarPestana = def => { const k = pestanaInicial || def; pestanaInicial = null; return k; };
+
+function pintarMateria(m){
+  const v = $("#v-mundo");
+  v.style.setProperty("--c", m.c);
+  const i = MATERIAS.indexOf(m);
+  const ini = tomarPestana("mapa");
+  v.innerHTML = `
+    <div class="world-head">
+      <a class="back" href="#mundos">${U().cambiar}</a>
+      <h1>${m.corto}</h1>
+      <p class="sub">${U().mundo} ${pad(i+1)} · ${m.curso} · ${m.grupos}</p>
+      <p class="desc">${U().descMateria(nombre(m), m.niveles.length)}</p>
+      <img class="pj" src="${m.pj}" alt="">
+    </div>
+    ${tabsHTML(PESTANAS_MATERIA(m),ini,"m")}
+    <div class="panel-wrap" id="m-panel"></div>`;
+  const render = k => {
+    const p = $("#m-panel");
+    if (k==="mapa"){
+      p.innerHTML = [1,2,3].map(t=>`
+        <section class="term">
+          <h2>${U().trim[t-1]}</h2>
+          <div class="levels">
+            ${m.niveles.map((n,j)=>[n,j]).filter(([n])=>n[1]===t).map(([n,j])=>{
+              const [cl,txt] = estado(n[2],n[3]);
+              return `<a class="level st-${cl}" href="#${m.id}-n${j+1}">
+                <span class="num">${U().nivel} ${pad(j+1)}</span>
+                <span class="t">${tituloNivel(m,j)}</span>
+                <span class="dates">${f(n[2])} – ${f(n[3])}</span><br>
+                <span class="chip">${txt}</span>
+              </a>`;}).join("")}
+          </div>
+        </section>`).join("");
+    } else {
+      const o = U().o;
+      const textos = { material:o.material, evaluacion:o.evaluacion, cuaderno: m.id==="dt4" ? o.cuadernoDT : o.cuaderno };
+      p.innerHTML = obras(textos[k], m.pj);
+    }
+  };
+  enlazarTabs(v, render); render(ini);
+}
+
+function pintarNivel(m, j){
+  const v = $("#v-nivel");
+  const n = m.niveles[j];
+  v.style.setProperty("--c", m.c);
+  const [cl,txt] = estado(n[2],n[3]);
+  const L = U().nivelCorto;
+  const prev = j>0 ? `<a href="#${m.id}-n${j}">◂ ${L} ${pad(j)}</a>` : `<a class="ghost" aria-hidden="true">·</a>`;
+  const next = j<m.niveles.length-1 ? `<a href="#${m.id}-n${j+2}">${L} ${pad(j+2)} ▸</a>` : `<a class="ghost" aria-hidden="true">·</a>`;
+  const ini = tomarPestana("mision");
+  v.innerHTML = `
+    <div class="level-head">
+      <img class="pj" src="${m.pj}" alt="">
+      <a class="back" href="#${m.id}">${U().mapaDe(m.corto+" "+m.curso)}</a>
+      <span class="big">${U().nivel} ${pad(j+1)} / ${pad(m.niveles.length)}</span>
+      <h1>${tituloNivel(m,j)}</h1>
+      <div class="meta">
+        <span>${m.corto} ${m.curso}</span>
+        <span>${U().trim[n[1]-1]}</span>
+        <span>${f(n[2])} – ${f(n[3])}</span>
+        <span class="st-${cl}" style="clip-path:none"><span class="chip" style="margin:0">${txt}</span></span>
+      </div>
+    </div>
+    ${tabsHTML(PESTANAS_NIVEL(),ini,"n")}
+    <div class="panel-wrap">
+      ${aviso()}
+      <div id="n-panel"></div>
+      <nav class="level-nav" aria-label="${U().otros}">${prev}${next}</nav>
+    </div>`;
+  const o = U().o;
+  const textos = { mision:o.mision, teoria:o.teoria, actividades:o.actividades(cuadernoDe(m).toLowerCase()), recursos:o.recursos, rubrica:o.rubrica };
+  const cont = (window.CONTENIDOS || {})[`${m.id}-n${j+1}`] || {};
+  const render = k => {
+    const p = $("#n-panel");
+    if (cont[k]) { p.innerHTML = cont[k].html(); cont[k].init && cont[k].init(p); }
+    else p.innerHTML = obras(textos[k]);
+  };
+  enlazarTabs(v, render); render(ini);
+}
+
+function pintarManual(){
+  const v = $("#v-manual");
+  const ini = tomarPestana("normas");
+  v.innerHTML = `
+    <div class="world-head" style="--c:var(--fluor)">
+      <a class="back" href="#mundos">${U().volver}</a>
+      <h1>${U().manualTitle}</h1>
+      <p class="desc">${U().manualDesc}</p>
+    </div>
+    ${tabsHTML(PESTANAS_MANUAL(),ini,"g")}
+    <div class="panel-wrap" id="g-panel"></div>`;
+  const o = U().o;
+  const textos = { normas:o.normas, material:o.materialComun, cuaderno:o.cuadernoManual, classroom:o.classroom };
+  const render = k => { $("#g-panel").innerHTML = obras(textos[k]); };
+  enlazarTabs(v, render); render(ini);
+}
+
+/* ===================== RUTAS (#hash) ===================== */
+function ir(mantenerScroll){
+  const h = location.hash.replace("#","");
+  document.querySelectorAll(".view").forEach(s=>s.classList.remove("on"));
+  document.querySelectorAll("[data-nav]").forEach(a=>a.removeAttribute("aria-current"));
+  let m, mt;
+  if (h==="mundos"){ pintarCarteles(); $("#v-mundos").classList.add("on"); $("[data-nav=mundos]").setAttribute("aria-current","page"); }
+  else if (h==="manual"){ pintarManual(); $("#v-manual").classList.add("on"); $("[data-nav=manual]").setAttribute("aria-current","page"); }
+  else if ((mt = h.match(/^([a-z0-9]+)-n(\d+)$/)) && (m = MATERIAS.find(x=>x.id===mt[1])) && m.niveles[mt[2]-1]){
+    pintarNivel(m, mt[2]-1); $("#v-nivel").classList.add("on"); $("[data-nav=mundos]").setAttribute("aria-current","page");
+  }
+  else if ((m = MATERIAS.find(x=>x.id===h))){ pintarMateria(m); $("#v-mundo").classList.add("on"); $("[data-nav=mundos]").setAttribute("aria-current","page"); }
+  else { $("#v-start").classList.add("on"); }
+  if (!mantenerScroll) window.scrollTo(0,0);
+}
+document.querySelectorAll("[data-lang]").forEach(b => b.addEventListener("click", () => I18N.set(b.dataset.lang)));
+I18N.on(() => {
+  const sel = document.querySelector(".view.on .tab[aria-selected=true]");
+  pestanaInicial = sel ? sel.dataset.k : null;
+  const y = window.scrollY;
+  pintarFijos(); ir(true); window.scrollTo(0, y);
+});
+addEventListener("hashchange", () => ir());
+pintarFijos();
+ir();
+</script>
+</body>
+</html>
