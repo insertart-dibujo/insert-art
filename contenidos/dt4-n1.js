@@ -626,7 +626,7 @@
     progreso: (n, t) => `Llevas ${n} de ${t}`, borrar: 'Borrar mis marcas', confirmar: '¿Seguro? Pulsa otra vez para borrar.'
   };
   /* indicadores de la rúbrica que se evalúan en cada actividad (mismo orden que ACT_ES.acts) */
-  const ACT_IL = [['IL 1.1', 'IL 1.2', 'IL 1.3', 'IL 1.4'], ['IL 2.1', 'IL 2.2', 'IL 2.3'], ['IL 3.1', 'IL 3.2', 'IL 3.3', 'IL 3.4'], [], ['IL 4.1', 'IL 4.2', 'IL 4.3', 'IL 4.4', 'IL 4.5']];
+  const ACT_IL = [['IL 1.1', 'IL 1.2', 'IL 1.3', 'IL 1.4'], ['IL 2.1', 'IL 2.2', 'IL 2.3'], ['IL 3.1', 'IL 3.2', 'IL 3.3', 'IL 3.4'], ['IL 1.4'], ['IL 4.1', 'IL 4.2', 'IL 4.3', 'IL 4.4', 'IL 4.5']];
   const KEY = 'insertart-dt4n1-cotejo';
   const leer = () => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } };
   const guardar = v => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) { } };

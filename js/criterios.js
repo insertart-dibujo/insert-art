@@ -1,17 +1,17 @@
 /* INSERT ART · Enlace entre actividades, indicadores de logro y criterios de evaluación (común a todos los niveles) */
 (function () {
   const T = {
-    es: { evalua: 'Qué se evalúa en esta actividad', criterio: 'Criterio', enAct: 'Se evalúa en', act: 'Actividad' },
-    en: { evalua: 'What is assessed in this activity', criterio: 'Criterion', enAct: 'Assessed in', act: 'Activity' },
-    fr: { evalua: 'Ce qui est évalué dans cette activité', criterio: 'Critère', enAct: 'Évalué dans', act: 'Activité' },
-    ru: { evalua: 'Что оценивается в этом задании', criterio: 'Критерий', enAct: 'Оценивается в', act: 'Задание' }
+    es: { evalua: 'Qué se evalúa en esta actividad', criterio: 'Criterio', enAct: 'Se evalúa en', act: 'Actividad', ils: 'Indicadores de logro que salen de este criterio:' },
+    en: { evalua: 'What is assessed in this activity', criterio: 'Criterion', enAct: 'Assessed in', act: 'Activity', ils: 'Achievement indicators that come from this criterion:' },
+    fr: { evalua: 'Ce qui est évalué dans cette activité', criterio: 'Critère', enAct: 'Évalué dans', act: 'Activité', ils: 'Indicateurs de réussite issus de ce critère :' },
+    ru: { evalua: 'Что оценивается в этом задании', criterio: 'Критерий', enAct: 'Оценивается в', act: 'Задание', ils: 'Показатели, которые вытекают из этого критерия:' }
   };
   const t = () => T[(window.I18N && window.I18N.lang) || 'es'] || T.es;
 
   /* indicadores de la rúbrica: código → [nombre, criterio] */
   const indicadores = R => {
     const m = {};
-    R.bloques.forEach(([, ils]) => ils.forEach(([code, name, crit]) => { m[code] = [name, crit]; }));
+    R.bloques.forEach(([, ils]) => ils.forEach(([code, name, crit, desc]) => { m[code] = [name, crit, desc]; }));
     return m;
   };
 
@@ -20,10 +20,10 @@
     if (!ils || !ils.length) return '';
     const I = indicadores(R), txt = Object.fromEntries(R.criterios);
     const porCrit = {};
-    ils.forEach(c => { if (I[c]) (porCrit[I[c][1]] = porCrit[I[c][1]] || []).push(`<span class="cl-il">${c} · ${I[c][0]}</span>`); });
+    ils.forEach(c => { if (I[c]) (porCrit[I[c][1]] = porCrit[I[c][1]] || []).push(`<li class="cl-il"><b>${c} · ${I[c][0]}</b><span>${I[c][2] || ''}</span></li>`); });
     const orden = R.criterios.map(c => c[0]).filter(k => porCrit[k]);
     return `<div class="crit-link"><p class="cl-t">${t().evalua}</p><ul>${orden.map(k => `
-      <li><b class="cl-c">${t().criterio} ${k}</b><span class="cl-d">${txt[k] || ''}</span><span class="cl-ils">${porCrit[k].join('')}</span></li>`).join('')}</ul></div>`;
+      <li><b class="cl-c">${t().criterio} ${k}</b><span class="cl-d">${txt[k] || ''}</span><span class="cl-sub">${t().ils}</span><ul class="cl-ils">${porCrit[k].join('')}</ul></li>`).join('')}</ul></div>`;
   }
 
   /* en la rúbrica: para cada criterio, en qué actividades se evalúa. mapa = [[título actividad, [ILs]]…] */
@@ -43,8 +43,11 @@
 .act-list .crit-link li{display:block!important;padding:0!important;border:0!important;background:none!important;margin:0!important}
 .crit-link .cl-c{display:inline-block;font-family:var(--pixel);font-size:9px;padding:4px 6px;background:var(--c);color:var(--asfalto);margin-bottom:4px}
 .crit-link .cl-d{display:block;font-size:14px;opacity:.85;max-width:72ch}
-.crit-link .cl-ils{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.crit-link .cl-il{font-size:13px;padding:3px 7px;border:1px solid var(--c);color:#fff}
+.crit-link .cl-sub{display:block;margin-top:8px;font-size:12px;font-weight:700;color:var(--c)}
+.crit-link .cl-ils{list-style:none;margin:4px 0 0!important;padding-left:14px!important;border-left:2px solid var(--c);display:grid;gap:6px}
+.act-list .crit-link .cl-il{font-size:14px}
+.crit-link .cl-il b{display:block;color:#fff}
+.crit-link .cl-il span{opacity:.85}
 .crit-list .cl-en{display:block;margin-top:6px;font-size:13px;color:var(--c)}
 `;
     document.head.appendChild(st);
