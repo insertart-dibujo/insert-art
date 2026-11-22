@@ -206,7 +206,7 @@
       ['Leer la obra', 'Bloque 1', 'Elegid <b>dos obras de arte históricas</b> que os gustaría transformar en meme; <b>una de ellas, andaluza</b>. De cada una, en el cuaderno:<br>• <b>Ficha:</b> título, autoría, fecha y técnica.<br>• <b>Lectura denotativa:</b> qué se ve (figuras, objetos, colores, composición).<br>• <b>Lectura connotativa:</b> qué sugiere, qué símbolos usa y qué emociones transmite.<br>• <b>Ayer y hoy:</b> qué contaba en su época y qué podría contar hoy.'],
       ['La idea', 'Bloque 2', 'Elegid una de las dos obras y haced un <b>boceto rápido</b> del meme en el cuaderno. Anotad:<br>• El <b>recurso</b> que vais a usar: hipérbole, ironía, metáfora visual o incongruencia.<br>• Dónde está el <b>giro</b> y cuál será el <b>texto</b>.<br>• En qué <b>espacio del centro</b> lo colocaríais y para qué <b>público</b>.<br>• Comprobad que <b>critica una idea y no humilla a nadie</b>.'],
       ['Fotomontaje', 'Bloque 3', 'Construid <b>un meme por pareja</b> con <b>fotomontaje tradicional</b>: recortad fragmentos de <b>distintas obras</b>, probad combinaciones y pegad con intención. Añadid el texto. Tiene que <b>entenderse de un vistazo</b>: contraste, pocos elementos y texto e imagen que se apoyen.'],
-      ['Presentación', 'Bloque 4', 'Presentad vuestro meme a la clase: la <b>idea</b>, el <b>espacio del centro</b> para el que lo pensasteis, el <b>proceso</b>, las <b>dificultades</b> y los <b>logros</b>. Después, haced la <b>autoevaluación y la coevaluación</b> con el formulario que os dará vuestro profesor.']
+      ['Presentación', 'Bloque 4', 'Presentad vuestro meme a la clase: la <b>idea</b>, el <b>espacio del centro</b> para el que lo pensasteis, el <b>proceso</b>, las <b>dificultades</b> y los <b>logros</b>. Después, haced la <b>autoevaluación y la coevaluación</b> con el formulario que os dará vuestro profesor.', `<div class="ideas"><b>Exposición guiada: vuestro profesor os hará estas preguntas:</b><ol style="margin:8px 0 0 20px"><li><b>¿Cómo lo habéis hecho?</b> Contad los pasos, desde la lectura de las obras hasta el fotomontaje terminado. <span class="il-crit">Criterio 4.2</span></li><li><b>¿Qué os costó más y cómo lo resolvisteis?</b> Por ejemplo, encontrar el giro o conseguir que las piezas encajaran. <span class="il-crit">Criterio 4.2</span></li><li><b>¿De qué estáis más orgullosos y qué cambiaríais si lo repitierais?</b> <span class="il-crit">Criterio 4.2</span></li></ol><p style="margin-top:8px">Preparad las respuestas en pareja antes de la exposición.</p></div>`]
     ],
     cotejoT: 'Lista de cotejo: ¿cómo vais?',
     cotejoP: 'Marca lo que ya tienes hecho. Las marcas se guardan solo en este dispositivo. Cuando tu profesor te lo pida, <b>haz una captura de pantalla de esta lista y súbela a la tarea de Classroom</b>: así podrá darte retroalimentación.',
@@ -229,8 +229,8 @@
       return `
       <div class="acts" style="--c:var(--rosa)">
         <p class="act-intro">${A.intro}</p>
-        <ol class="act-list">${A.acts.map(([t, tag, d], i) => `
-          <li><span class="act-n">${i + 1}</span><div><p class="act-tag">${tag}</p><h3>${t}</h3><p>${d}</p>${window.CRIT ? CRIT.enActividad(pick('rub', RUB_ES), ACT_IL[i]) : ''}</div></li>`).join('')}</ol>
+        <ol class="act-list">${A.acts.map(([t, tag, d, extra], i) => `
+          <li><span class="act-n">${i + 1}</span><div><p class="act-tag">${tag}</p><h3>${t}</h3><p>${d}</p>${extra ? `<div class="act-extra">${extra}</div>` : ''}${window.CRIT ? CRIT.enActividad(pick('rub', RUB_ES), ACT_IL[i]) : ''}</div></li>`).join('')}</ol>
         <section class="cotejo" aria-labelledby="cotejo-t" style="box-shadow:0 0 22px #ff5ad822">
           <h2 id="cotejo-t">${A.cotejoT}</h2>
           <p class="cotejo-p">${A.cotejoP}</p>
