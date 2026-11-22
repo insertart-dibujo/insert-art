@@ -16,6 +16,8 @@ ul.cards3.c2{grid-template-columns:1fr 1fr}
 .act-extra details li{font-size:15px;margin:4px 0}
 .act-extra .ex-t{margin:6px 0 4px}
 ol.fases-n2.f8 em{display:none}
+.act-cuad{display:inline-block;margin:2px 0 10px;padding:6px 12px;border:2px dashed var(--acero);font-weight:700;font-size:15px}
+.act-cuad.si{border:2px solid var(--fluor);color:var(--fluor);background:#d6ff3a14}
 .fig-geo text,.fig-tri text{font-family:var(--body);fill:#f3efe6}
 .fig-geo .fg-l{font-size:13px;font-weight:600}
 .fig-geo .fg-h{font-family:var(--pixel);font-size:10px;fill:var(--fluor)}
@@ -148,7 +150,7 @@ ol.fases-n2.f8 em{display:none}
         <div class="acts" style="--c:${color}">
           <p class="act-intro">${A.intro}</p>
           <ol class="act-list">${A.acts.map(([t, tag, d, extra], i) => `
-            <li><span class="act-n">${i + 1}</span><div><p class="act-tag">${tag}</p><h3>${t}</h3>${window.CRIT ? CRIT.cuerpo(d) : ''}${extra ? `<div class="act-extra">${extra}</div>` : ''}${window.CRIT ? CRIT.enActividad(R, ACT_IL[i]) : ''}</div></li>`).join('')}</ol>
+            <li><span class="act-n">${i + 1}</span><div><p class="act-tag">${tag}</p><h3>${t}</h3>${typeof d.cuaderno === 'boolean' ? `<p class="act-cuad${d.cuaderno ? ' si' : ''}">${d.cuaderno ? A.cuadSi : A.cuadNo}</p>` : ''}${window.CRIT ? CRIT.cuerpo(d) : ''}${extra ? `<div class="act-extra">${extra}</div>` : ''}${window.CRIT ? CRIT.enActividad(R, ACT_IL[i]) : ''}</div></li>`).join('')}</ol>
           <section class="cotejo" aria-labelledby="${id}-cotejo-t">
             <h2 id="${id}-cotejo-t">${A.cotejoT}</h2>
             <p class="cotejo-p">${A.cotejoP}</p>

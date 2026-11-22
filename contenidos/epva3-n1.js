@@ -180,6 +180,7 @@
       intro: 'Esta unidad ya está <b>terminada</b>. Aquí tienes las tres actividades tal como se hicieron y cómo se evalúa cada una.',
       acts: [
         ['Investigación del patrimonio andaluz', 'En equipo', {
+          cuaderno: false,
           obj: 'Investigar el patrimonio histórico de Andalucía del bloque que os tocó.',
           pasos: [
             'Cread un documento de Google y compartidlo con todo el equipo: será vuestro <b>cuaderno de investigación</b>.',
@@ -200,6 +201,7 @@
           <details><summary>Bloque 5 · Siglos XIX y XX: tradición y ruptura</summary><ul><li>¿Qué movimiento artístico representa y qué rompe respecto a la tradición anterior?</li><li>¿Qué relación tiene el artista con Andalucía (nacimiento, formación, obra)?</li><li>¿Qué obras suyas dialogan explícitamente con el arte del pasado?</li><li>¿Cómo influyó el contexto histórico (industrialización, guerras, cambios sociales) en su obra?</li><li>¿Qué mujeres artistas de la época deberían visibilizarse y por qué han sido menos conocidas?</li></ul></details>
           <details><summary>Bloque 6 · Arte contemporáneo y patrimonio vivo</summary><ul><li>¿Qué tipo de manifestación es (museo, festival, arte urbano, patrimonio inmaterial)?</li><li>¿Qué la conecta formal o temáticamente con el arte del pasado?</li><li>¿Quién la gestiona o protege actualmente (institución, ayuntamiento, comunidad)?</li><li>¿Qué papel juega en la identidad cultural actual de su ciudad o comarca?</li><li>¿Cómo participa o puede participar el propio alumnado en ella (asistir, visitar, crear)?</li></ul></details>`],
         ['Propuesta de tríptico a mano alzada', 'Boceto', {
+          cuaderno: false,
           obj: 'Planificar el tríptico antes de diseñarlo: qué va en cada cara y en qué orden se lee.',
           pasos: [
             'Doblad un folio A4 apaisado en <b>tres cuerpos</b>, con plegado envolvente.',
@@ -213,6 +215,7 @@
           entrega: 'Archivo «2 Propuesta Tríptico» en la carpeta EPVA › Unidad 1.'
         }],
         ['Tríptico final', 'Diseño', {
+          cuaderno: false,
           obj: 'Diseñar en Canva un tríptico claro y atractivo que difunda el patrimonio investigado.',
           pasos: [
             'Abrid en Canva un diseño de <b>tríptico A4 apaisado</b>.',
@@ -227,6 +230,7 @@
           entrega: 'Archivo «3 Tríptico final» en la carpeta EPVA › Unidad 1, y el enlace a la carpeta en la tarea de Classroom.'
         }]
       ],
+      cuadSi: '📒 Se realiza en el cuaderno de artista', cuadNo: 'No se realiza en el cuaderno de artista',
       cotejoT: 'Lista de cotejo: ¿cómo vais?',
       cotejoP: 'Marca lo que tienes hecho. Las marcas se guardan solo en este dispositivo.',
       grupos: [

@@ -363,6 +363,7 @@
       intro: 'Cada actividad dice qué hay que hacer, paso a paso. Lo que se dibuja va en tu <b>cuaderno de artista</b>, y las fotos, en la tarea de Classroom.',
       acts: [
         ['Anatomía de una puerta', 'Cuaderno', {
+          cuaderno: true,
           obj: 'Analizar una puerta del patrimonio andaluz y separar lo geométrico de lo orgánico.',
           pasos: [
             'En una <b>doble página</b> de tu cuaderno, titulada «Anatomía de una puerta», dibuja a lápiz y en grande una puerta andaluza (la de la lámina o una de las tres de la teoría).',
@@ -375,6 +376,7 @@
           entrega: 'Foto de la doble página en la tarea de Classroom.'
         }],
         ['Taller de trazados', 'Cuaderno', {
+          cuaderno: true,
           obj: 'Aprender con instrumentos los trazados que vais a usar en el diseño.',
           pasos: [
             ['Construye en tu cuaderno, con escuadra, cartabón y compás:', [
@@ -395,6 +397,7 @@
           entrega: 'Fotos de las páginas del taller en la tarea de Classroom.'
         }],
         ['Diseño del marco', 'Pareja', {
+          cuaderno: true,
           obj: 'Diseñar vuestro tramo del marco combinando geometría y naturaleza.',
           pasos: [
             'Medid el <b>tramo del marco</b> que os toca y anotad sus medidas.',
@@ -409,6 +412,7 @@
           entrega: 'Fotos de las páginas del diseño en la tarea de Classroom.'
         }],
         ['Del cartón a la puerta', 'Construcción', {
+          cuaderno: false,
           obj: 'Construir vuestro tramo en cartón con textura de piedra y montar el marco entre toda la clase.',
           pasos: [
             'Pasad el diseño al <b>cartón a tamaño real</b> con una cuadrícula.',
@@ -423,6 +427,7 @@
           entrega: 'Las piezas, en clase. Fotos de las piezas en la tarea de Classroom.'
         }]
       ],
+      cuadSi: '📒 Se realiza en el cuaderno de artista', cuadNo: 'No se realiza en el cuaderno de artista',
       cotejoT: 'Lista de cotejo: ¿cómo vais?',
       cotejoP: 'Marca lo que ya tienes hecho. Las marcas se guardan solo en este dispositivo. Cuando tu profesor te lo pida, <b>haz una captura de pantalla de esta lista y súbela a la tarea de Classroom</b>: así podrá darte retroalimentación.',
       grupos: [
