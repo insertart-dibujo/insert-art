@@ -625,6 +625,8 @@
     ],
     progreso: (n, t) => `Llevas ${n} de ${t}`, borrar: 'Borrar mis marcas', confirmar: '¿Seguro? Pulsa otra vez para borrar.'
   };
+  /* indicadores de la rúbrica que se evalúan en cada actividad (mismo orden que ACT_ES.acts) */
+  const ACT_IL = [['IL 1.1', 'IL 1.2', 'IL 1.3', 'IL 1.4'], ['IL 2.1', 'IL 2.2', 'IL 2.3'], ['IL 3.1', 'IL 3.2', 'IL 3.3', 'IL 3.4'], [], ['IL 4.1', 'IL 4.2', 'IL 4.3', 'IL 4.4', 'IL 4.5']];
   const KEY = 'insertart-dt4n1-cotejo';
   const leer = () => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } };
   const guardar = v => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) { } };
@@ -637,7 +639,7 @@
       <div class="acts" style="--c:var(--fluor)">
         <p class="act-intro">${A.intro}</p>
         <ol class="act-list">${A.acts.map(([t, tag, d], i) => `
-          <li><span class="act-n">${i + 1}</span><div><p class="act-tag">${tag}</p><h3>${t}</h3><p>${d}</p></div></li>`).join('')}</ol>
+          <li><span class="act-n">${i + 1}</span><div><p class="act-tag">${tag}</p><h3>${t}</h3><p>${d}</p>${window.CRIT ? CRIT.enActividad(Object.assign({}, RUB_ES, (TR() && TR().rub) || {}), ACT_IL[i]) : ''}</div></li>`).join('')}</ol>
         <section class="cotejo" aria-labelledby="cotejo-t">
           <h2 id="cotejo-t">${A.cotejoT}</h2>
           <p class="cotejo-p">${A.cotejoP}</p>
@@ -705,7 +707,7 @@
       <div class="rub" style="--c:var(--fluor)">
         <p class="act-intro">${R.intro}</p>
         <h2 class="rec-h">${R.criteriosT}</h2>
-        <ul class="crit-list">${R.criterios.map(([k, d]) => `<li><b>${k}</b><span>${d}</span></li>`).join('')}</ul>
+        <ul class="crit-list">${R.criterios.map(([k, d]) => `<li><b>${k}</b><span>${d}${window.CRIT ? CRIT.actividadesDe(R, Object.assign({}, ACT_ES, (TR() && TR().act) || {}).acts.map((a, i) => [a[0], ACT_IL[i]]), k) : ''}</span></li>`).join('')}</ul>
         ${R.bloques.map(([bt, ils]) => `
           <h2 class="rec-h">${bt}</h2>
           ${ils.map(([code, name, crit, desc, lv]) => `

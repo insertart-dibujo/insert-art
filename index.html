@@ -263,6 +263,24 @@ main{min-height:calc(100vh - 60px)}
 .st-live .t{color:var(--c);text-shadow:0 0 12px var(--c)}
 @keyframes pulse{50%{box-shadow:0 0 16px var(--c)}}
 .st-locked{opacity:.55}
+/* nivel con icono de olla */
+.level.icono{clip-path:none;border:0;background:none;padding:0;min-height:290px;display:grid;place-items:center}
+.level.icono:hover{background:none}
+.olla-svg{position:absolute;inset:0;margin:auto;width:100%;max-width:300px;height:100%;overflow:visible;filter:drop-shadow(0 0 10px color-mix(in srgb,var(--c) 70%,transparent))}
+.level.icono .in{position:relative;z-index:1;width:min(64%,190px);margin-top:92px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.level.icono .t{font-size:27px;margin:6px 0 6px}
+.level.icono .dates{font-size:12px}
+.level.icono .chip{margin-top:8px}
+.level.marco .in{margin-top:40px;width:min(60%,180px)}
+.level.marco .t{font-size:25px}
+.marco .bocadillo{animation:vapor 3s ease-in-out infinite;transform-box:fill-box;transform-origin:left bottom}
+.olla .burbujas circle{animation:burbuja 2.6s ease-in infinite;transform-box:fill-box;transform-origin:center}
+.olla .burbujas circle:nth-child(2){animation-delay:-.7s}.olla .burbujas circle:nth-child(3){animation-delay:-1.4s}.olla .burbujas circle:nth-child(4){animation-delay:-2s}
+@keyframes burbuja{0%{transform:translateY(14px) scale(.4);opacity:0}30%{opacity:1}100%{transform:translateY(-26px) scale(1.1);opacity:0}}
+.olla .vapor{animation:vapor 4s ease-in-out infinite}
+@keyframes vapor{50%{transform:translateY(-6px);opacity:.25}}
+.level.icono:hover .olla-svg{transform:rotate(-3deg) scale(1.03);transition:transform .25s}
+.level.icono.st-done .t{color:#fff}
 .st-locked .chip{color:var(--tiza)}
 
 /* zona en obras (vacío) */
@@ -570,10 +588,19 @@ ul.cards3 span{font-size:15px;opacity:.85}
 <script src="js/i18n.js"></script>
 <script src="js/geo.js"></script>
 <script src="js/sfx.js"></script>
+<script src="js/criterios.js"></script>
 <script src="contenidos/dt4-n1.js"></script>
 <script src="contenidos/dt4-n1.en.js"></script>
 <script src="contenidos/dt4-n1.fr.js"></script>
 <script src="contenidos/dt4-n1.ru.js"></script>
+<script src="contenidos/exp4-n1.js"></script>
+<script src="contenidos/exp4-n1.en.js"></script>
+<script src="contenidos/exp4-n1.fr.js"></script>
+<script src="contenidos/exp4-n1.ru.js"></script>
+<script src="contenidos/exp4-n2.js"></script>
+<script src="contenidos/exp4-n2.en.js"></script>
+<script src="contenidos/exp4-n2.fr.js"></script>
+<script src="contenidos/exp4-n2.ru.js"></script>
 <script>
 /* ===================== DATOS (de las temporalizaciones 2026/27) ===================== */
 const MATERIAS = [
@@ -619,9 +646,9 @@ const MATERIAS = [
   { id:"exp4", pj:"img/video.png", corto:"EXP. ART.", curso:"4.º ESO", grupos:"4.º B", c:"var(--rosa)",
     nombre:"Expresión Artística", cuaderno:"Cuaderno de artista",
     niveles:[
-      ["Pócimas",1,"2026-10-06","2026-10-28"],
-      ["Humor gráfico",1,"2026-11-03","2026-11-25"],
-      ["Comida ficticia para el hambre creativo",1,"2026-11-25","2026-12-22"],
+      ["Pócimas",1,"2026-10-06","2026-10-28","olla"],
+      ["Humor gráfico",1,"2026-11-17","2026-12-01","marco"],
+      ["Comida ficticia para el hambre creativo",1,"2026-12-02","2026-12-22"],
       ["Artistas y artesanos",2,"2027-01-12","2027-02-10"],
       ["Escultura efímera",2,"2027-02-09","2027-03-17"],
       ["Spot contra los bulos y los estereotipos",3,"2027-03-30","2027-04-21"],
@@ -661,6 +688,34 @@ const obras = (que, pj) => `
     <h3>${U().obras}</h3>
     <p>${que}</p>
   </div>`;
+/* icono de acceso en forma de olla (niveles con n[4]==="olla") */
+const OLLA_SVG = `<svg class="olla-svg" viewBox="0 0 300 300" aria-hidden="true">
+  <g class="vapor" fill="none" stroke="#f3efe6" stroke-width="3" stroke-linecap="round" opacity=".55">
+    <path d="M110 58 c-12 -14 12 -22 0 -38"/><path d="M152 50 c-12 -14 12 -22 0 -40"/><path d="M194 58 c-12 -14 12 -22 0 -38"/>
+  </g>
+  <g class="burbujas" fill="var(--fluor)">
+    <circle cx="120" cy="80" r="7"/><circle cx="170" cy="74" r="5"/><circle cx="196" cy="86" r="8"/><circle cx="142" cy="66" r="4"/>
+  </g>
+  <path d="M40 92 L36 74 M260 92 L264 74" stroke="#8a8592" stroke-width="5" stroke-linecap="round"/>
+  <path class="cuerpo" d="M28 100 C 22 200, 70 268, 150 268 C 230 268, 278 200, 272 100 Z" fill="#1d1a22"/>
+  <ellipse cx="150" cy="100" rx="124" ry="22" fill="var(--fluor)" opacity=".9"/>
+  <ellipse cx="150" cy="100" rx="124" ry="22" fill="none" stroke="var(--c)" stroke-width="6"/>
+  <path d="M28 100 C 22 200, 70 268, 150 268 C 230 268, 278 200, 272 100" fill="none" stroke="var(--c)" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M90 266 l-14 22 M210 266 l14 22" stroke="var(--c)" stroke-width="7" stroke-linecap="round"/>
+  <path d="M56 140 C 60 190, 92 226, 132 236" fill="none" stroke="#f3efe6" stroke-width="3" opacity=".25" stroke-linecap="round"/>
+</svg>`;
+const MARCO_SVG = `<svg class="olla-svg marco-svg" viewBox="0 0 300 300" aria-hidden="true">
+  <rect x="34" y="62" width="232" height="206" fill="#1d1a22"/>
+  <rect x="34" y="62" width="232" height="206" fill="none" stroke="var(--c)" stroke-width="12"/>
+  <rect x="52" y="80" width="196" height="170" fill="none" stroke="var(--fluor)" stroke-width="3" stroke-dasharray="2 6"/>
+  <g fill="var(--c)"><circle cx="34" cy="62" r="11"/><circle cx="266" cy="62" r="11"/><circle cx="34" cy="268" r="11"/><circle cx="266" cy="268" r="11"/></g>
+  <path d="M150 62 L150 30 M126 30 L150 10 L174 30" stroke="#8a8592" stroke-width="3" fill="none"/>
+  <g class="bocadillo">
+    <path d="M190 18 h92 a14 14 0 0 1 14 14 v30 a14 14 0 0 1 -14 14 h-56 l-20 18 v-18 h-16 a14 14 0 0 1 -14 -14 v-30 a14 14 0 0 1 14 -14z" fill="#f3efe6"/>
+    <text x="236" y="56" text-anchor="middle" font-family="Permanent Marker, cursive" font-size="22" fill="#141218">JA JA</text>
+  </g>
+</svg>`;
+const ICONOS = { olla: OLLA_SVG, marco: MARCO_SVG };
 const aviso = () => U().aviso ? `<p class="aviso-trad">${U().aviso}</p>` : "";
 
 /* textos fijos de la página */
@@ -738,6 +793,15 @@ function pintarMateria(m){
           <div class="levels">
             ${m.niveles.map((n,j)=>[n,j]).filter(([n])=>n[1]===t).map(([n,j])=>{
               const [cl,txt] = estado(n[2],n[3]);
+              if (ICONOS[n[4]]) return `<a class="level icono ${n[4]} st-${cl}" href="#${m.id}-n${j+1}">
+                ${ICONOS[n[4]]}
+                <span class="in">
+                  <span class="num">${U().nivel} ${pad(j+1)}</span>
+                  <span class="t">${tituloNivel(m,j)}</span>
+                  <span class="dates">${f(n[2])} – ${f(n[3])}</span>
+                  <span class="chip">${txt}</span>
+                </span>
+              </a>`;
               return `<a class="level st-${cl}" href="#${m.id}-n${j+1}">
                 <span class="num">${U().nivel} ${pad(j+1)}</span>
                 <span class="t">${tituloNivel(m,j)}</span>

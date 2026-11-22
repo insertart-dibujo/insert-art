@@ -46,7 +46,23 @@
       o.connect(g).connect(a.destination); o.start(t + dt); o.stop(t + dt + 0.4);
     });
   }
-  const SFX = { laser, metal, coin };
+  function burbuja() {
+    const a = ac(); if (!a) return; const t = a.currentTime;
+    [0, 0.09, 0.2, 0.27].forEach((dt, i) => {
+      const o = a.createOscillator(), g = a.createGain();
+      const f0 = 260 + Math.random() * 260;
+      o.type = 'sine';
+      o.frequency.setValueAtTime(f0, t + dt);
+      o.frequency.exponentialRampToValueAtTime(f0 * 2.6, t + dt + 0.07);
+      g.gain.setValueAtTime(0.0001, t + dt);
+      g.gain.exponentialRampToValueAtTime(VOL * (i % 2 ? 0.6 : 0.9), t + dt + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.0005, t + dt + 0.09);
+      o.connect(g).connect(a.destination); o.start(t + dt); o.stop(t + dt + 0.11);
+    });
+  }
+  /* las llamadas directas desde los contenidos también respetan el silencio */
+  const SFX = {};
+  [['laser', laser], ['metal', metal], ['coin', coin], ['burbuja', burbuja]].forEach(([k, fn]) => { SFX[k] = () => { if (on) fn(); }; });
 
   /* Qué suena en cada botón */
   const MAPA = [
