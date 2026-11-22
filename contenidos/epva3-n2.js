@@ -86,25 +86,6 @@
 
   /* =============== CONSTRUCCIONES ANIMADAS =============== */
   const players = {
-    paralela(L) {
-      const Pp = P(260, 140), M = P(140, 300), N = P(340, 300), Q = P(460, 140), d = 200;
-      return { title: L('Paralela a una recta por un punto exterior (con compás)'), vb: [600, 380], yt: 'https://www.youtube.com/watch?v=nosS8NBU19A', steps: [
-        { t: L('Dibuja la recta r y el punto P fuera de ella.'), d: [S.seg(P(40, 300), P(560, 300), 'g-data'), S.txt(P(548, 290), 'r', 'g-lbl it'), S.pt(Pp, 'P', -22, -6)] },
-        { t: L('Con centro en P traza un arco que corte a r en M.'), d: [S.mark(Pp, M, 12), S.pt(M, 'M', -8, 24)] },
-        { t: L('Con centro en M y el mismo radio, corta a r en N.'), d: [S.mark(M, N, 10), S.pt(N, 'N', -8, 24)] },
-        { t: L('Con centro en N y en P, y el mismo radio, traza dos arcos que se cortan en Q.'), d: [S.mark(N, Q, 10), S.mark(Pp, Q, 8), S.pt(Q, 'Q', 10, -8)] },
-        { t: L('Une P y Q: es la paralela a r.'), d: [S.line(Pp, Q, 120, 80, 'g-res')] }
-      ] };
-    },
-    perpendicular(L) {
-      const A = P(300, 300), M = P(180, 300), N = P(420, 300), Q = P(300, 140);
-      return { title: L('Perpendicular a una recta por uno de sus puntos (con compás)'), vb: [600, 380], yt: 'https://www.youtube.com/watch?v=n5ULlzB5yYU', steps: [
-        { t: L('Dibuja la recta r y marca el punto A sobre ella.'), d: [S.seg(P(40, 300), P(560, 300), 'g-data'), S.pt(A, 'A', -6, 24)] },
-        { t: L('Con centro en A traza un arco que corte a r en M y N.'), d: [S.arc(A, 120, 170, 190), S.arc(A, 120, -10, 10), S.pt(M, 'M', -8, 24), S.pt(N, 'N', -8, 24)] },
-        { t: L('Con centro en M y en N y una abertura mayor, traza dos arcos que se corten en Q.'), d: [S.mark(M, Q, 10), S.mark(N, Q, 10), S.pt(Q, 'Q', 10, -8)] },
-        { t: L('Une A y Q: es la perpendicular. Forma 90º con r.'), d: [S.line(A, Q, 0, 100, 'g-res'), S.ra(A, P(1, 0), P(0, -1), 16)] }
-      ] };
-    },
     segmentos(L) {
       const a = 200, b = 120, O = P(60, 300), A = P(60 + a, 300), B = P(60 + a + b, 300), C = P(60 + a - b, 300);
       return { title: L('Suma y resta de segmentos'), vb: [600, 380], yt: 'https://www.youtube.com/watch?v=cJuJ2ARixRc', steps: [
@@ -277,9 +258,7 @@
           <li><b>Compás</b><span>Traza circunferencias y arcos, y traslada medidas.</span></li>
           <li><b>Lápiz</b><span>Duro (2H) para los trazados auxiliares; blando (HB) para el resultado.</span></li>
         </ul>
-        <p><b>Paralelas</b> son rectas que nunca se cortan; <b>perpendiculares</b>, las que se cortan formando cuatro ángulos de 90º. Se trazan apoyando la escuadra en el cartabón y deslizándola, o solo con compás:</p>
-        ${h.player('paralela')}
-        ${h.player('perpendicular')}`],
+        <p><b>Paralelas</b> son rectas que nunca se cortan; <b>perpendiculares</b>, las que se cortan formando cuatro ángulos de 90º. Se trazan apoyando la escuadra en el cartabón y deslizándola, o solo con compás. Mira cómo se hacen en los vídeos de abajo y repítelo en tu cuaderno.</p>`],
 
       segmentos: ['Operaciones con segmentos', h => `
         <p>Con el compás se <b>trasladan medidas</b> sin regla graduada: abres el compás con la longitud de un segmento y la llevas a otro sitio. Así se copia, se suma y se resta.</p>
@@ -506,7 +485,7 @@
     VIDEOS: {
       geometria: [['El arte islámico en 3 minutos', 'VwDfRXuOl9k', '3 min', 'Con Mucho Arte']],
       tresPuertas: [['El arte de al-Ándalus: de la Mezquita de Córdoba a la Alhambra', 'MX6_aixNwAw', '24 min', 'Belén Montilla']],
-      instrumentos: [['Paralelas y perpendiculares con escuadra y cartabón', 'wFNh_wx_79o', '7 min', 'Arturo Geometría']],
+      instrumentos: [['Paralelas y perpendiculares con escuadra y cartabón', 'wFNh_wx_79o', '7 min', 'Arturo Geometría'], ['Paralela a una recta por un punto exterior (con compás)', 'nosS8NBU19A', '2 min', 'Arturo Geometría'], ['Paralelas y perpendiculares por un punto (con regla y compás)', 'n5ULlzB5yYU', '4 min', 'Arturo Geometría']],
       angulos: [['Trazado de ángulos con compás', 't15t_NRqV6U', '5 min', 'Arturo Geometría'], ['Suma y resta de ángulos con compás', 'aVr0pLUvJPY', '4 min', 'Arturo Geometría']],
       composicion: [['Cómo aprender a componer un cuadro', 'SSgJMBhZQFc', '3 min', 'Antonio García Villarán']]
     },
