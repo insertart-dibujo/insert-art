@@ -341,7 +341,8 @@ main{min-height:calc(100vh - 60px)}
 
 /* ---------- TEORÍA ---------- */
 .teoria{display:grid;grid-template-columns:230px minmax(0,1fr);gap:40px;align-items:start}
-.toc{position:sticky;top:84px;display:flex;flex-direction:column;gap:4px;padding:16px;background:#100f14;border:2px solid var(--acero)}
+.toc{position:sticky;top:84px;display:flex;flex-direction:column;gap:4px;padding:16px;background:#100f14;border:2px solid var(--acero);max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--c) #100f14}
+.toc::-webkit-scrollbar{width:8px}.toc::-webkit-scrollbar-track{background:#100f14}.toc::-webkit-scrollbar-thumb{background:var(--c)}
 .toc-t{font-family:var(--pixel);font-size:9px;color:var(--c);margin-bottom:8px}
 .toc button{text-align:left;font-size:14px;line-height:1.3;padding:7px 8px;border-left:3px solid transparent;opacity:.8}
 .toc button span{font-family:var(--pixel);font-size:8px;color:var(--c);margin-right:8px}

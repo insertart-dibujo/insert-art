@@ -49,6 +49,7 @@
 .dia-min{font-family:var(--pixel);font-size:10px;border:2px solid var(--fluor);color:var(--fluor);padding:6px 8px}
 .dia-act{border:2px solid var(--c);padding:6px 10px;font-size:14px;background:#17151c}
 .dia-act:hover,.dia-act:focus-visible{background:var(--c);color:var(--asfalto)}
+.toc button.on{opacity:1;border-left-color:var(--c);background:#1b1921;color:var(--c)}
 .toc .toc-dia{font-family:var(--pixel);font-size:8px;color:var(--fluor);margin:10px 0 2px;padding-left:8px}
 .saberes{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:-6px 0 14px!important}
 .saberes span{font-family:var(--pixel);font-size:8px;border:1px solid var(--fluor);color:var(--fluor);padding:4px 6px}
@@ -391,6 +392,20 @@ ol.fases-n2 em{font-style:normal;font-family:var(--pixel);font-size:7px;color:va
       const suave = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
       root.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () =>
         root.querySelector('#t-' + b.dataset.go).scrollIntoView({ behavior: suave, block: 'start' })));
+      /* el índice marca el apartado visible y se desplaza solo para mostrarlo */
+      const toc = root.querySelector('.toc');
+      if (toc && 'IntersectionObserver' in window) {
+        const btns = Object.fromEntries([...toc.querySelectorAll('[data-go]')].map(b => [b.dataset.go, b]));
+        const io = new IntersectionObserver(es => es.forEach(e => {
+          if (!e.isIntersecting) return;
+          const b = btns[e.target.id.slice(2)]; if (!b || b.classList.contains('on')) return;
+          toc.querySelectorAll('.on').forEach(x => x.classList.remove('on')); b.classList.add('on');
+          const vertical = getComputedStyle(toc).position === 'sticky';
+          if (vertical) { const t = b.offsetTop - toc.clientHeight / 2 + b.offsetHeight / 2; toc.scrollTo({ top: Math.max(0, t), behavior: suave }); }
+          else { const l = b.offsetLeft - toc.clientWidth / 2 + b.offsetWidth / 2; toc.scrollTo({ left: Math.max(0, l), behavior: suave }); }
+        }), { rootMargin: '-20% 0px -70% 0px' });
+        root.querySelectorAll('.tsec').forEach(sct => io.observe(sct));
+      }
       root.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => {
         const tab = document.querySelector('.view.on .tab[data-k="actividades"]'); if (!tab) return;
         tab.click();
