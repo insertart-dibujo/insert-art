@@ -3,54 +3,158 @@
   window.EXP4N2 = window.EXP4N2 || {};
   window.EXP4N2.fr = {
     t: {
+      'Escala de planos: la misma figura vista con seis encuadres distintos': 'Échelle des plans : la même figure vue avec six cadrages différents',
+      'Gran plano general': 'Plan d’ensemble', 'Plano general': 'Plan général', 'Plano americano': 'Plan américain', 'Plano medio': 'Plan moyen', 'Primer plano': 'Gros plan', 'Plano detalle': 'Plan de détail',
+      'Cuatro leyes de la percepción: proximidad, semejanza, cierre y figura-fondo': 'Quatre lois de la perception : proximité, similitude, clôture et figure-fond',
+      'PROXIMIDAD': 'PROXIMITÉ', 'SEMEJANZA': 'SIMILITUDE', 'CIERRE': 'CLÔTURE', 'FIGURA Y FONDO': 'FIGURE ET FOND',
       'Esquema de un meme: texto arriba, imagen en el centro, contexto y giro': 'Schéma d’un mème : texte en haut, image au centre, contexte et chute',
       'YO: HOY EMPIEZO CON TIEMPO': 'MOI : AUJOURD’HUI JE M’Y PRENDS TÔT', 'TAMBIÉN YO, LA NOCHE ANTES:': 'TOUJOURS MOI, LA VEILLE AU SOIR :',
       'TEXTO': 'TEXTE', 'IMAGEN': 'IMAGE', 'GIRO': 'CHUTE'
     },
-    ui: { indice: 'Sommaire', tocAria: 'Sommaire de la théorie', cuadernoLabel: 'Dans votre carnet d’artiste :', misionK: 'MISSION' },
+    ui: { indice: 'Sommaire', tocAria: 'Sommaire de la théorie', cuadernoLabel: 'Dans votre carnet d’artiste :', misionK: 'MISSION',
+      diasIntro: 'La théorie est répartie sur <b>cinq jours</b>. Chaque jour se lit ou s’explique en classe en <b>15 minutes maximum</b> et te prépare à une activité. Les vidéos « Pour aller plus loin » sont à regarder à la maison : elles ne font pas partie de ces 15 minutes.',
+      diaK: 'JOUR', minutos: '15 min', prepara: 'Te prépare pour', actK: 'Activité',
+      dias: ['Lire l’art et en rire', 'Le langage visuel', 'Construire l’idée', 'Cadrer et monter', 'Présenter et évaluer'],
+      saberK: 'Savoir de base', verMas: 'Pour aller plus loin (à la maison)', abreYT: 'S’ouvre sur YouTube',
+      subt: 'Les vidéos sont en espagnol. Sur YouTube, tu peux activer les sous-titres et les traduire automatiquement dans ta langue.',
+      videosT: 'Vidéos du niveau', videosP: 'Toutes les vidéos de la théorie, classées par jour. Elles s’ouvrent sur YouTube.' },
     sec: {
       meme: ['Qu’est-ce qu’un mème ?', h => `
         <p class="def">Un <b>mème</b> est une idée qui se copie et se transforme en passant de personne en personne.</p>
         <div class="flujo"><span>IDÉE</span><b>→</b><span>COPIE</span><b>→</b><span>NOUVELLE VERSION</span></div>
-        <p>Le biologiste <b>Richard Dawkins</b> a inventé le mot dans son livre <i>Le Gène égoïste</i> (1976). Aujourd’hui, on l’utilise surtout pour les images avec du texte qui circulent sur internet.</p>`],
+        <p>Le biologiste <b>Richard Dawkins</b> a inventé le mot dans son livre <i>Le Gène égoïste</i> (1976). Aujourd’hui, on l’utilise surtout pour les images avec du texte qui circulent sur internet : on les partage, on les copie et chacun les détourne.</p>`],
       lectura: ['Lire une image : dénotation et connotation', h => `
         <p>Avant de transformer une œuvre, il faut savoir la lire. Toute image peut se lire de deux façons :</p>
         <div class="lectura">
           <div><h3>Lecture dénotative</h3><p><b>Ce qu’on voit</b>, de façon objective : tout le monde serait d’accord.</p>
-            <ul><li>Fiche : titre, artiste, date et technique.</li><li>Quels personnages et objets apparaissent.</li><li>Couleurs, lumière et composition.</li></ul></div>
+            <ul><li>Fiche : titre, auteur, date et technique.</li><li>Quels personnages et objets apparaissent.</li><li>Couleurs, lumière et composition.</li></ul></div>
           <div><h3>Lecture connotative</h3><p><b>Ce qu’elle suggère</b> : le sens, qui dépend de qui regarde et de son époque.</p>
             <ul><li>Quelles émotions elle transmet.</li><li>Quels symboles elle utilise et ce qu’ils signifient.</li><li>Ce qu’elle voulait dire à son époque et ce qu’elle nous dit aujourd’hui.</li></ul></div>
         </div>
-        <p class="tip"><b>Astuce :</b> si ce que tu écris commence par « on voit… », c’est de la dénotation. S’il commence par « on dirait… », « ça suggère… » ou « ça représente… », c’est de la connotation.</p>
-        ${h.cuaderno('faites d’abord la lecture dénotative puis la lecture connotative de chaque œuvre.')}`],
+        <p class="tip"><b>Astuce :</b> si ce que tu écris commence par « on voit… », c’est de la dénotation. Si cela commence par « on dirait… », « cela suggère… » ou « cela représente… », c’est de la connotation.</p>
+        ${h.cuaderno('faites d’abord la lecture dénotative, puis la lecture connotative de chaque œuvre.')}`],
+      historia: ['L’art riait déjà avant internet', h => `
+        <p>L’humour critique n’a pas été inventé par internet. Regarde <b>la technique</b> de chaque artiste : c’était le moyen de faire arriver son image à beaucoup de gens.</p>
+        <ul class="cual">
+          <li><b>Goya</b><span><i>Les Caprices</i> (1799). <b>Gravure</b> à l’eau-forte et à l’aquatinte : on imprime beaucoup d’exemplaires à partir d’une plaque. Satire des vices et du pouvoir de son époque.</span></li>
+          <li><b>Daumier</b><span>XIXe siècle. <b>Lithographie</b> pour la presse : des caricatures qui exagèrent les traits des puissants pour les critiquer.</span></li>
+          <li><b>Arts incohérents</b><span>Paris, années 1880. Des artistes qui parodiaient des œuvres célèbres avec un humour absurde : des mèmes avant les mèmes.</span></li>
+          <li><b>Duchamp</b><span><i>L.H.O.O.Q.</i> (1919). <b>Crayon sur une carte postale</b> de la Joconde : il lui dessine une moustache et un bouc. Il transforme une icône de l’art pour provoquer.</span></li>
+        </ul>
+        <p class="def"><b>De l’art au design :</b> ces techniques ne sont pas restées dans les musées. La gravure a illustré des livres, la lithographie a rempli affiches et journaux, et le photomontage a fini en couverture de magazine et dans la publicité.</p>
+        <p>Comme eux, vous allez partir d’une œuvre connue et changer son sens pour dire quelque chose de nouveau.</p>`],
+      lenguaje: ['Le langage visuel : éléments, composition et couleur', h => `
+        <p class="def">Une image se construit avec des <b>éléments visuels</b>, comme une phrase se construit avec des mots.</p>
+        <ul class="cual cual5">
+          <li><b>Point</b><span>Attire le regard.</span></li>
+          <li><b>Ligne</b><span>Guide le regard et donne du mouvement.</span></li>
+          <li><b>Forme</b><span>Les figures et les taches.</span></li>
+          <li><b>Couleur</b><span>Émotion et contraste.</span></li>
+          <li><b>Texture</b><span>L’aspect au toucher.</span></li>
+        </ul>
+        <h3 class="sub">Composition : comment on place les éléments</h3>
+        <ul class="cual">
+          <li><b>Centre d’intérêt</b><span>Ce qu’on regarde en premier. Place-le là où tu veux qu’on regarde.</span></li>
+          <li><b>Poids visuel</b><span>Ce qui est grand, sombre, saturé ou isolé pèse plus.</span></li>
+          <li><b>Équilibre</b><span>Symétrique : calme et ordre. Asymétrique : mouvement et tension.</span></li>
+          <li><b>Règle des tiers</b><span>Divise l’image en 3 × 3 et place l’important aux croisements.</span></li>
+        </ul>
+        <h3 class="sub">Couleur</h3>
+        <ul class="cards3">
+          <li><b>Chaudes et froides</b><span>Rouge, orange et jaune avancent et donnent de l’énergie. Bleu, vert et violet reculent et apaisent.</span></li>
+          <li><b>Complémentaires</b><span>Rouge-vert, bleu-orange, jaune-violet. Ensemble, elles donnent le contraste maximal.</span></li>
+          <li><b>Symbolique</b><span>Le rouge peut signifier la passion ou le danger. Le sens dépend de la culture et du contexte.</span></li>
+        </ul>
+        ${h.cuaderno('dans la lecture dénotative de chaque œuvre, indiquez le centre d’intérêt, le type d’équilibre et les couleurs dominantes.')}`],
+      percepcion: ['Comment nous regardons : la perception visuelle', h => `
+        <p>Nous ne voyons pas les choses séparément : le cerveau les <b>organise</b> pour leur donner un sens. La psychologie de la <b>Gestalt</b> (Allemagne, début du XXe siècle) a décrit les lois qu’il suit.</p>
+        ${h.gestalt()}
+        <ul class="cual">
+          <li><b>Proximité</b><span>Ce qui est proche est vu comme un groupe.</span></li>
+          <li><b>Similitude</b><span>Ce qui se ressemble (forme, couleur) se regroupe.</span></li>
+          <li><b>Clôture</b><span>Le cerveau complète les formes incomplètes.</span></li>
+          <li><b>Figure et fond</b><span>Nous séparons ce qui ressort de ce qui est derrière. Parfois, on peut les inverser.</span></li>
+        </ul>
+        <p class="tip"><b>Dans votre mème :</b> la figure principale doit bien se détacher du fond, et les pièces qui vont ensemble doivent être proches ou se ressembler.</p>`],
       anatomia: ['Anatomie d’un mème', h => `
         ${h.fig()}
-        <ul class="cual"><li><b>Texte</b><span>Présente la situation.</span></li><li><b>Image</b><span>Apporte la réaction.</span></li><li><b>Contexte</b><span>On reconnaît quelque chose qui nous arrive.</span></li><li><b>Chute</b><span>La contradiction fait rire.</span></li></ul>`],
-      historia: ['L’art riait déjà avant internet', h => `
+        <ul class="cual"><li><b>Texte</b><span>Pose la situation.</span></li><li><b>Image</b><span>Apporte la réaction.</span></li><li><b>Contexte</b><span>On reconnaît quelque chose qui nous arrive.</span></li><li><b>Chute</b><span>La contradiction crée l’humour.</span></li></ul>`],
+      recursos: ['Publicité : convaincre et faire rire', h => `
+        <p>La publicité veut que tu fasses quelque chose : acheter, voter, penser d’une certaine façon. Pour te convaincre, elle utilise trois types de procédés :</p>
         <ul class="cards3">
-          <li><b>Goya</b><span><i>Les Caprices</i> (1799) : satire des vices et du pouvoir de son époque.</span></li>
-          <li><b>Daumier</b><span>Caricatures dans la presse du XIXe siècle pour critiquer la société.</span></li>
-          <li><b>Duchamp</b><span><i>L.H.O.O.Q.</i> (1919) : modifier une icône de l’art pour provoquer.</span></li>
+          <li><b>Formels</b><span>Ce qu’on voit : composition, couleur, typographie et plan.</span></li>
+          <li><b>Linguistiques</b><span>Ce qu’on dit : slogan court, jeu de mots, rime, questions et impératifs (« Essaie-le ! »).</span></li>
+          <li><b>Persuasifs</b><span>Comment elle convainc : émotion, humour, désir, une personne célèbre ou le sentiment d’appartenir au groupe.</span></li>
         </ul>
-        <p>Comme eux, vous allez partir d’une œuvre connue et changer son sens pour dire quelque chose de nouveau.</p>`],
-      fotomontaje: ['Photomontage traditionnel', h => `
-        <p class="def"><b>Photomontage traditionnel :</b> découper des fragments de différentes images et les coller pour créer une nouvelle image avec un autre sens.</p>
-        <ol class="pasos3"><li><b>Découpe</b>Des fragments de différentes œuvres : une tête, un fond, un objet…</li><li><b>Essaie des combinaisons</b>Déplace les pièces avant de coller. Cherche le contraste.</li><li><b>Colle avec intention</b>Chaque pièce doit dire quelque chose.</li></ol>
-        <p class="tip"><b>Ce n’est pas assembler pour assembler :</b> c’est faire en sorte que les pièces disent quelque chose.</p>`],
-      vistazo: ['Ça se comprend d’un coup d’œil', h => `
-        <ul class="cards3"><li><b>Contraste</b><span>Grand / petit. Sérieux / absurde.</span></li><li><b>Synthèse</b><span>Peu d’éléments. Une idée claire.</span></li><li><b>Texte + image</b><span>Ensemble, ils disent ce qu’ils ne diraient pas seuls.</span></li></ul>`],
-      recursos: ['Convaincre et faire rire', h => `
-        <p>Le mème et la publicité partagent des astuces. Voici les quatre procédés que vous allez utiliser :</p>
+        <h3 class="sub">Quatre figures communes au mème et à la publicité</h3>
         <ul class="cual">
           <li><b>Hyperbole</b><span>Exagérer : « J’ai un million de devoirs ». Un million ?</span></li>
           <li><b>Ironie</b><span>Dire le contraire : « Génial », quand internet coupe.</span></li>
           <li><b>Métaphore visuelle</b><span>Remplacer : un sac à dos transformé en montagne.</span></li>
           <li><b>Incongruité</b><span>Casser la logique : un roi qui attend le bus.</span></li>
         </ul>
+        <p class="def"><b>Société de consommation :</b> beaucoup de publicités ne vendent pas un produit, elles vendent un désir (être heureux, populaire, admiré). Un mème critique peut retourner ce message.</p>
         <p class="tip"><b>Pour t’entraîner :</b> dans l’onglet <b>Ressources</b>, tu as le jeu « Quel procédé est-ce ? ».</p>`],
       estereotipos: ['L’humour oui, les stéréotypes non', h => `
-        <p>Se moquer du genre, de l’origine ou du corps de quelqu’un répète le sexisme et les canons corporels que l’on voit dans la publicité et les médias. <b>Remettez en question les préjugés, pas les personnes qui les subissent.</b></p>
-        <p class="ojo"><b>Avant de partager, demandez-vous :</b> de qui rit-on ? Est-ce que ça critique une idée ou est-ce que ça humilie une personne ?</p>`]
+        <p class="def">Un <b>stéréotype</b> est une idée simplifiée et répétée sur un groupe de personnes : « les filles sont… », « les gens de tel endroit sont… ».</p>
+        <ul class="cards3">
+          <li><b>Rôles sexistes</b><span>Des publicités où elle fait le ménage et lui conduit, ou des jouets « pour filles » et « pour garçons ».</span></li>
+          <li><b>Normes corporelles</b><span>Des corps retouchés que presque personne n’a, présentés comme normaux.</span></li>
+          <li><b>Humour qui blesse</b><span>Se moquer du genre, de l’origine ou du corps de quelqu’un répète ces stéréotypes.</span></li>
+        </ul>
+        <p><b>Remettez en question les préjugés, pas les personnes qui les subissent.</b></p>
+        <p class="ojo"><b>Avant de valider votre idée, demandez-vous :</b> de qui rions-nous ? Critique-t-elle une idée ou humilie-t-elle une personne ?</p>`],
+      planos: ['Cadrage, plan et angle', h => `
+        <p class="def"><b>Cadrer</b>, c’est décider ce qui reste dans l’image et ce qui reste dehors. Selon la distance, on parle de différents <b>plans</b>.</p>
+        ${h.planos()}
+        <ul class="cual cual3">
+          <li><b>Plan d’ensemble</b><span>Le lieu. La figure est petite : elle situe.</span></li>
+          <li><b>Plan général</b><span>La figure entière dans son environnement.</span></li>
+          <li><b>Plan américain</b><span>Jusqu’aux genoux : figure et action.</span></li>
+          <li><b>Plan moyen</b><span>Jusqu’à la taille : ce qu’elle fait.</span></li>
+          <li><b>Gros plan</b><span>Le visage : l’émotion.</span></li>
+          <li><b>Plan de détail</b><span>Une petite partie qui compte.</span></li>
+        </ul>
+        <h3 class="sub">Angle : d’où l’on regarde</h3>
+        <ul class="cual">
+          <li><b>Normal</b><span>À hauteur des yeux : neutre.</span></li>
+          <li><b>Plongée</b><span>D’en haut : la figure paraît petite ou faible.</span></li>
+          <li><b>Contre-plongée</b><span>D’en bas : la figure paraît grande et puissante.</span></li>
+          <li><b>Angle penché</b><span>Image inclinée : instabilité, quelque chose ne va pas.</span></li>
+        </ul>
+        <p><b>Image séquentielle :</b> plusieurs images dans l’ordre qui racontent une histoire, comme la bande dessinée, le <i>storyboard</i> ou les mèmes en deux cases « ce que j’attends / ce qui arrive ».</p>
+        <p class="tip"><b>Dans votre mème :</b> découper un visage en gros plan ou une figure entière change ce qu’il raconte. Un personnage en contre-plongée paraîtra puissant ; en plongée, petit.</p>`],
+      fotomontaje: ['Photomontage traditionnel et numérique', h => `
+        <p class="def"><b>Photomontage :</b> assembler des fragments de différentes photos ou images pour créer une nouvelle image avec un autre sens.</p>
+        <p><b>Origine :</b> à Berlin, vers 1918–1920, les dadaïstes <b>Hannah Höch</b>, <b>Raoul Hausmann</b> et <b>John Heartfield</b> découpaient des photos de journaux et de magazines pour critiquer la guerre et la politique. Heartfield a porté le photomontage sur les couvertures de magazine : de l’art au graphisme.</p>
+        <div class="lectura">
+          <div><h3>Traditionnel</h3><ul><li>Ciseaux, colle et reproductions imprimées.</li><li>On déplace les pièces sur le papier avant de les coller.</li><li>Les bords découpés se voient, et cela aussi exprime quelque chose.</li></ul></div>
+          <div><h3>Numérique</h3><ul><li>La photo numérique est faite de <b>pixels</b>.</li><li>Les logiciels de retouche travaillent par <b>calques</b>.</li><li>On découpe, on redimensionne et on change la couleur sans laisser de trace.</li></ul></div>
+        </div>
+        <ol class="pasos3"><li><b>Découpe</b>Des fragments de différentes œuvres : une tête, un fond, un objet…</li><li><b>Essaie des combinaisons</b>Déplace les pièces avant de coller. Cherche le contraste.</li><li><b>Colle avec intention</b>Chaque pièce doit dire quelque chose.</li></ol>
+        <p class="ojo"><b>Une photo peut aussi mentir.</b> Les montages numériques servent à créer des fausses informations. Avant de croire ou de partager une image, vérifiez d’où elle vient.</p>
+        <p class="tip"><b>Vous travaillez en traditionnel :</b> des découpages de reproductions d’œuvres d’art, sur papier.</p>`],
+      vistazo: ['Compris en un coup d’œil', h => `
+        <ul class="cards3"><li><b>Contraste</b><span>Grand / petit. Sérieux / absurde.</span></li><li><b>Synthèse</b><span>Peu d’éléments. Une idée claire.</span></li><li><b>Texte + image</b><span>Ensemble, ils disent ce qu’ils ne diraient pas seuls.</span></li></ul>
+        <p class="tip"><b>Le test de la seconde :</b> montrez le mème à quelqu’un pendant une seconde. S’il le comprend, ça marche.</p>`],
+      proceso: ['Le processus de création', h => `
+        <p>Un projet artistique ne se fait pas d’un coup : il passe par des étapes. Voici les vôtres :</p>
+        <ol class="fases-n2">
+          <li><b>Chercher</b><span>Lire les œuvres.</span><em>Activité 1</em></li>
+          <li><b>Projeter</b><span>Ce qu’on veut dire, avec quel procédé, pour qui et où.</span><em>Activité 2</em></li>
+          <li><b>Esquisser</b><span>Essayer plusieurs options rapides.</span><em>Activité 2</em></li>
+          <li><b>Réaliser</b><span>Le photomontage.</span><em>Activité 3</em></li>
+          <li><b>Réviser</b><span>Est-ce clair ? Est-ce que ça blesse quelqu’un ? Corriger.</span><em>Activité 3</em></li>
+          <li><b>Présenter</b><span>Le raconter à la classe.</span><em>Activité 4</em></li>
+          <li><b>Évaluer</b><span>Juger le processus et le résultat.</span><em>Activité 4</em></li>
+        </ol>
+        <h3 class="sub">Trois façons d’évaluer</h3>
+        <ul class="cards3">
+          <li><b>Autoréflexion</b><span>Ce que j’ai appris, ce qui a été difficile et ce que je changerais.</span></li>
+          <li><b>Autoévaluation</b><span>Je me mets une note avec la grille.</span></li>
+          <li><b>Coévaluation</b><span>J’évalue le travail des autres binômes, avec des arguments et du respect.</span></li>
+        </ul>
+        <p class="tip"><b>Les erreurs font partie du processus :</b> ce qui n’a pas marché et comment vous l’avez réglé, c’est justement ce qu’on vous demandera à la présentation.</p>`]
     },
     mision: {
       titulo: 'Transformez une œuvre d’art en mème',

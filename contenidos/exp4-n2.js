@@ -40,7 +40,47 @@
 .q-fb{margin-top:12px;font-size:15px;min-height:1.5em}
 .q-next{margin-top:12px;font-family:var(--pixel);font-size:11px;padding:12px 16px;background:var(--fluor);color:var(--asfalto);box-shadow:4px 4px 0 var(--fucsia)}
 .q-score{font-family:var(--pixel);font-size:10px;margin-bottom:10px;display:block}
-@media (max-width:700px){.pasos3,.lectura,.q-ops{grid-template-columns:1fr}}
+.dias-intro{border:2px solid var(--fluor);padding:12px 16px;background:#14160b;max-width:70ch}
+.dia{margin:34px 0 10px;padding-top:16px;border-top:4px solid var(--c)}
+.dia-h{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-bottom:10px}
+.dia-k{font-family:var(--pixel);font-size:11px;background:var(--c);color:var(--asfalto);padding:7px 9px;box-shadow:4px 4px 0 var(--fluor)}
+.dia-h h2{margin:0!important;font-family:var(--marker);font-weight:400;font-size:clamp(30px,4vw,44px);color:var(--c);text-shadow:0 0 12px color-mix(in srgb,var(--c) 50%,transparent)}
+.dia-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 8px;font-size:15px}
+.dia-min{font-family:var(--pixel);font-size:10px;border:2px solid var(--fluor);color:var(--fluor);padding:6px 8px}
+.dia-act{border:2px solid var(--c);padding:6px 10px;font-size:14px;background:#17151c}
+.dia-act:hover,.dia-act:focus-visible{background:var(--c);color:var(--asfalto)}
+.toc .toc-dia{font-family:var(--pixel);font-size:8px;color:var(--fluor);margin:10px 0 2px;padding-left:8px}
+.saberes{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:-6px 0 14px!important}
+.saberes span{font-family:var(--pixel);font-size:8px;border:1px solid var(--fluor);color:var(--fluor);padding:4px 6px}
+.saberes .saber-k{border-color:transparent;color:var(--acero-l,#a9a4b3);padding-left:0}
+h3.sub{font-family:var(--marker);font-weight:400;font-size:26px;color:var(--c);margin:20px 0 6px!important}
+.cual.cual5{grid-template-columns:repeat(5,1fr)}
+.cual.cual3{grid-template-columns:repeat(3,1fr)}
+.fig-n2{display:block;width:100%;max-width:680px;height:auto;margin:12px 0 16px}
+.fig-n2 text{font-family:var(--pixel);font-size:8px;fill:#f3efe6;letter-spacing:.02em}
+.fig-n2 text.pl{font-family:var(--body);font-size:12px;font-weight:600;letter-spacing:0}
+.videos{border:2px solid var(--acero);background:#121016;padding:12px 14px;margin:18px 0 4px;max-width:70ch}
+.videos > p{font-family:var(--pixel);font-size:9px;color:var(--c);margin:0 0 10px!important}
+.videos ul{list-style:none;margin:0!important;padding:0;display:grid;gap:8px}
+.videos li{margin:0!important}
+.videos a{display:flex;gap:12px;align-items:flex-start;color:inherit;text-decoration:none;padding:6px;border:1px solid transparent}
+.videos a:hover,.videos a:focus-visible{border-color:var(--c);background:#1b1921}
+.v-play{flex:none;display:grid;place-items:center;width:30px;height:30px;background:var(--fucsia,#ff2d6f);color:#fff;font-size:12px}
+.videos b{display:block;font-weight:600}
+.videos small{display:block;font-size:13px;opacity:.7;margin-top:2px}
+.v-subt{font-size:14px;opacity:.75;margin-top:24px}
+.videos > p.v-intro,.videos > p.v-subt{font-family:var(--body);font-size:15px;color:inherit}
+.sub-vid{font-family:var(--marker);font-weight:400;font-size:clamp(30px,4vw,42px);color:var(--c);margin:0 0 6px}
+ol.fases-n2{list-style:none;counter-reset:f;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0 20px!important;max-width:none!important;padding:0}
+ol.fases-n2 li{counter-increment:f;margin:0!important;padding:10px;border:2px solid var(--acero);background:#17151c;display:flex;flex-direction:column;gap:4px;max-width:none!important}
+ol.fases-n2 li::before{content:counter(f);font-family:var(--pixel);font-size:10px;color:var(--asfalto);background:var(--c);width:24px;height:24px;display:grid;place-items:center}
+ol.fases-n2 b{font-family:var(--marker);font-weight:400;font-size:21px;color:var(--c)}
+ol.fases-n2 span{font-size:14px;flex:1}
+ol.fases-n2 em{font-style:normal;font-family:var(--pixel);font-size:7px;color:var(--fluor)}
+.recursos .videos{max-width:900px}
+.recursos .videos h3{font-family:var(--pixel);font-size:9px;color:var(--fluor);margin:14px 0 6px}
+@media (max-width:1000px){.cual.cual5{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:700px){.pasos3,.lectura,.q-ops{grid-template-columns:1fr} ol.fases-n2,.cual.cual5,.cual.cual3{grid-template-columns:1fr 1fr}}
 `;
     document.head.appendChild(st);
   }
@@ -63,19 +103,102 @@
     </svg>`;
   }
 
+  /* =============== FIGURAS DE LA TEORÍA =============== */
+  /* escala de planos: la misma figura recortada con distintos encuadres */
+  function figPlanos() {
+    const P = [['Gran plano general', '-150 -20 500 360'], ['Plano general', '-10 6 220 316'], ['Plano americano', '12 18 176 238'],
+      ['Plano medio', '30 24 140 176'], ['Primer plano', '52 22 96 110'], ['Plano detalle', '76 44 48 34']];
+    return `<svg class="fig-n2" viewBox="-12 0 740 176" role="img" aria-label="${w('Escala de planos: la misma figura vista con seis encuadres distintos')}">
+      <defs><g id="n2-figura">
+        <rect x="-150" y="-20" width="500" height="360" fill="#1a1720"/>
+        <circle cx="-70" cy="30" r="22" fill="#f2b705" opacity=".55"/>
+        <rect x="-96" y="190" width="14" height="110" fill="#6b5a46"/><circle cx="-89" cy="170" r="42" fill="#2f6b4f"/>
+        <rect x="250" y="210" width="70" height="90" fill="#3a3742"/><path d="M240 214 l45 -40 l45 40 z" fill="#5a3a4a"/>
+        <path d="M-150 300 H350" stroke="#f3efe6" stroke-width="3" opacity=".5"/>
+        <rect x="76" y="190" width="20" height="104" rx="4" fill="#26313f"/><rect x="104" y="190" width="20" height="104" rx="4" fill="#26313f"/>
+        <rect x="68" y="92" width="64" height="104" rx="10" fill="#ff5ad8"/>
+        <path d="M70 104 L44 170 M130 104 L156 170" stroke="#ff5ad8" stroke-width="14" stroke-linecap="round"/>
+        <circle cx="100" cy="62" r="28" fill="#f2b705"/>
+        <circle cx="90" cy="58" r="4.5" fill="#141218"/><circle cx="110" cy="58" r="4.5" fill="#141218"/>
+        <path d="M89 74 q11 8 22 0" stroke="#141218" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </g></defs>
+      ${P.map(([t, vb], i) => `<g transform="translate(${i * 122} 0)">
+        <svg x="0" y="0" width="104" height="140" viewBox="${vb}" preserveAspectRatio="xMidYMid slice"><use href="#n2-figura"/></svg>
+        <rect x="0" y="0" width="104" height="140" fill="none" stroke="#f3efe6" stroke-width="2"/>
+        <text class="pl" x="52" y="160" text-anchor="middle">${w(t)}</text></g>`).join('')}
+    </svg>`;
+  }
+  /* leyes de la percepción (Gestalt) */
+  function figGestalt() {
+    const pts = (xs, ys, f) => xs.map(x => ys.map(y => f(x, y)).join('')).join('');
+    return `<svg class="fig-n2" viewBox="0 0 664 190" role="img" aria-label="${w('Cuatro leyes de la percepción: proximidad, semejanza, cierre y figura-fondo')}">
+      <g transform="translate(10 10)"><rect width="140" height="140" fill="#17151c" stroke="#5c5866"/>
+        ${pts([22, 40, 92, 110], [30, 52, 74, 96, 118], (x, y) => `<circle cx="${x}" cy="${y}" r="7" fill="#f3efe6"/>`)}
+        <text x="70" y="168" text-anchor="middle">${w('PROXIMIDAD')}</text></g>
+      <g transform="translate(176 10)"><rect width="140" height="140" fill="#17151c" stroke="#5c5866"/>
+        ${pts([24, 54, 84, 114], [28, 58, 88, 118], (x, y) => ((y - 28) / 30) % 2 ? `<rect x="${x - 8}" y="${y - 8}" width="16" height="16" fill="#ff5ad8"/>` : `<circle cx="${x}" cy="${y}" r="8" fill="#d6ff3a"/>`)}
+        <text x="70" y="168" text-anchor="middle">${w('SEMEJANZA')}</text></g>
+      <g transform="translate(342 10)"><rect width="140" height="140" fill="#17151c" stroke="#5c5866"/>
+        <circle cx="70" cy="70" r="44" fill="none" stroke="#f3efe6" stroke-width="8" stroke-dasharray="40 18"/>
+        <text x="70" y="168" text-anchor="middle">${w('CIERRE')}</text></g>
+      <g transform="translate(508 10)"><rect width="140" height="140" fill="#d6ff3a"/>
+        <path d="M40 8 H100 C100 30 84 36 84 50 C84 62 98 66 98 78 C98 92 82 96 82 110 C82 120 94 126 100 132 H40 C46 126 58 120 58 110 C58 96 42 92 42 78 C42 66 56 62 56 50 C56 36 40 30 40 8 Z" fill="#141218"/>
+        <text x="70" y="168" text-anchor="middle">${w('FIGURA Y FONDO')}</text></g>
+    </svg>`;
+  }
+
   /* =============== TEORÍA =============== */
   const UI_ES = {
     indice: 'Índice', tocAria: 'Índice de la teoría', cuadernoLabel: 'En vuestro cuaderno de artista:', misionK: 'MISIÓN',
-    juegoT: '¿Qué recurso es?', recPres: 'Presentación de clase', canva: 'Humor gráfico (Canva)'
+    juegoT: '¿Qué recurso es?', recPres: 'Presentación de clase', canva: 'Humor gráfico (Canva)',
+    diasIntro: 'La teoría está repartida en <b>cinco días</b>. Cada día se lee o se explica en clase en <b>15 minutos como máximo</b> y te prepara para una actividad. Los vídeos de «Para ver más» son para ampliar en casa: no entran en esos 15 minutos.',
+    diaK: 'DÍA', minutos: '15 min', prepara: 'Te prepara para', actK: 'Actividad',
+    dias: ['Leer el arte y reírse con él', 'El lenguaje visual', 'Construir la idea', 'Encuadrar y montar', 'Presentar y evaluar'],
+    saberK: 'Saber básico', verMas: 'Para ver más (en casa)', abreYT: 'Se abre en YouTube',
+    subt: 'Los vídeos están en español. En YouTube puedes activar los subtítulos y traducirlos automáticamente a tu idioma.',
+    videosT: 'Vídeos de la unidad', videosP: 'Todos los vídeos de la teoría, ordenados por días. Se abren en YouTube.'
   };
   const ui = () => pick('ui', UI_ES);
 
-  const ORDEN = ['meme', 'lectura', 'anatomia', 'historia', 'fotomontaje', 'vistazo', 'recursos', 'estereotipos'];
+  /* días: [secciones, actividades que prepara (índice 0..3)] */
+  const DIAS = [
+    [['meme', 'lectura', 'historia'], [0]],
+    [['lenguaje', 'percepcion'], [0, 1]],
+    [['anatomia', 'recursos', 'estereotipos'], [1]],
+    [['planos', 'fotomontaje', 'vistazo'], [2]],
+    [['proceso'], [3]]
+  ];
+  const ORDEN = DIAS.flatMap(d => d[0]);
+  const SABER = {
+    meme: ['EAR.4.B.8'], lectura: ['EAR.4.B.1', 'EAR.4.A.9'], historia: ['EAR.4.A.9'],
+    lenguaje: ['EAR.4.B.1'], percepcion: ['EAR.4.B.1'],
+    anatomia: ['EAR.4.B.8'], recursos: ['EAR.4.B.8'], estereotipos: ['EAR.4.B.8'],
+    planos: ['EAR.4.B.2'], fotomontaje: ['EAR.4.B.4', 'EAR.4.A.9'], vistazo: ['EAR.4.B.1'],
+    proceso: ['EAR.4.B.7']
+  };
+  /* [título en YouTube, id, duración, canal] */
+  const VIDEOS = {
+    historia: [['Todos los secretos de los Caprichos de Goya', 'kALuUACb2Ec', '13 min', 'Antonio García Villarán'],
+      ['Se adelantó 30 años a Dadá. Los Arts Incohérents', '0TWz_TfxiDQ', '19 min', 'Antonio García Villarán']],
+    lenguaje: [['Cómo aprender a componer un cuadro', 'SSgJMBhZQFc', '3 min', 'Antonio García Villarán'],
+      ['Un ejercicio de pintura para aprender composición y color', 'hNJY4I3d0WM', '3 min', 'Antonio García Villarán']],
+    percepcion: [['Teoría de la Gestalt: leyes de la percepción visual', 'DxL-Pw0lc_g', '5 min', 'Gisela Duarte']],
+    recursos: [['Retórica en la publicidad', 'PcPwTWEBbOw', '7 min', 'Contra5te Estudio']],
+    estereotipos: [['La publicidad y los estereotipos de género', 'YbZ4GjGuF00', '4 min', 'Proyecto NADS']],
+    planos: [['Tipos de planos más usados en cine y televisión', 'WsCETCsKkGE', '8 min', 'Aprendercine'],
+      ['Ángulos de cámara en fotografía y vídeo', '0qf1svMgbrw', '6 min', 'Aprendercine']],
+    fotomontaje: [['¿Qué es Dadá? ¿Arte o antiarte?', 'yuVQFFtk8dk', '12 min', 'Antonio García Villarán'],
+      ['¿Qué es el collage? Teoría y práctica (1/4)', 'sdYw8CuD2V8', '3 min', 'Antonio García Villarán'],
+      ['El origen del fotomontaje', 'H9YsJTfT6HM', '6 min', 'Domestika']]
+  };
+  const ytLink = ([t, id, dur, canal]) => `<li><a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener noreferrer" title="${ui().abreYT}"><span class="v-play" aria-hidden="true">▶</span><span><b>${t}</b><small>${canal} · ${dur}</small></span></a></li>`;
+  const bloqueVideos = id => VIDEOS[id] ? `<div class="videos"><p>${ui().verMas}</p><ul>${VIDEOS[id].map(ytLink).join('')}</ul></div>` : '';
+
   const SEC_ES = {
     meme: ['¿Qué es un meme?', h => `
       <p class="def">Un <b>meme</b> es una idea que se copia y se transforma al pasar de persona a persona.</p>
       <div class="flujo"><span>IDEA</span><b>→</b><span>COPIA</span><b>→</b><span>NUEVA VERSIÓN</span></div>
-      <p>El biólogo <b>Richard Dawkins</b> inventó la palabra en su libro <i>El gen egoísta</i> (1976). Hoy la usamos sobre todo para las imágenes con texto que circulan por internet.</p>`],
+      <p>El biólogo <b>Richard Dawkins</b> inventó la palabra en su libro <i>El gen egoísta</i> (1976). Hoy la usamos sobre todo para las imágenes con texto que circulan por internet: se comparten, se copian y cada persona les da una vuelta.</p>`],
 
     lectura: ['Leer una imagen: denotación y connotación', h => `
       <p>Antes de transformar una obra hay que saber leerla. Toda imagen se puede leer de dos maneras:</p>
@@ -88,6 +211,52 @@
       <p class="tip"><b>Truco:</b> si lo que escribes empieza por «se ve…», es denotación. Si empieza por «parece…», «sugiere…» o «representa…», es connotación.</p>
       ${h.cuaderno('haced primero la lectura denotativa y después la connotativa de cada obra.')}`],
 
+    historia: ['El arte ya se reía antes de internet', h => `
+      <p>El humor crítico no lo inventó internet. Fíjate en <b>la técnica</b> que usó cada artista: era la manera de que su imagen llegara a mucha gente.</p>
+      <ul class="cual">
+        <li><b>Goya</b><span><i>Los Caprichos</i> (1799). <b>Grabado</b> al aguafuerte y aguatinta: de una plancha se imprimen muchas copias. Sátira de los vicios y del poder de su época.</span></li>
+        <li><b>Daumier</b><span>Siglo XIX. <b>Litografía</b> para la prensa: caricaturas que exageran los rasgos de los poderosos para criticarlos.</span></li>
+        <li><b>Arts Incohérents</b><span>París, década de 1880. Artistas que parodiaban obras famosas con humor absurdo: memes antes de los memes.</span></li>
+        <li><b>Duchamp</b><span><i>L.H.O.O.Q.</i> (1919). <b>Lápiz sobre una postal</b> de la Gioconda: le pinta bigote y perilla. Cambia un icono del arte para provocar.</span></li>
+      </ul>
+      <p class="def"><b>Del arte al diseño:</b> estas técnicas no se quedaron en los museos. El grabado ilustró libros, la litografía llenó carteles y periódicos, y el fotomontaje acabó en portadas de revista y en publicidad.</p>
+      <p>Igual que ellos, vais a partir de una obra conocida y a cambiar su sentido para decir algo nuevo.</p>`],
+
+    lenguaje: ['El lenguaje visual: elementos, composición y color', h => `
+      <p class="def">Una imagen se construye con <b>elementos visuales</b>, igual que una frase se construye con palabras.</p>
+      <ul class="cual cual5">
+        <li><b>Punto</b><span>Atrae la mirada.</span></li>
+        <li><b>Línea</b><span>Dirige la mirada y da movimiento.</span></li>
+        <li><b>Forma</b><span>Las figuras y las manchas.</span></li>
+        <li><b>Color</b><span>Emoción y contraste.</span></li>
+        <li><b>Textura</b><span>Cómo parece al tacto.</span></li>
+      </ul>
+      <h3 class="sub">Composición: cómo se colocan los elementos</h3>
+      <ul class="cual">
+        <li><b>Centro de interés</b><span>Lo primero que se mira. Colócalo donde quieras que miren.</span></li>
+        <li><b>Peso visual</b><span>Lo grande, lo oscuro, lo saturado o lo aislado pesa más.</span></li>
+        <li><b>Equilibrio</b><span>Simétrico: calma y orden. Asimétrico: movimiento y tensión.</span></li>
+        <li><b>Regla de los tercios</b><span>Divide la imagen en 3 × 3 y coloca lo importante en los cruces.</span></li>
+      </ul>
+      <h3 class="sub">Color</h3>
+      <ul class="cards3">
+        <li><b>Cálidos y fríos</b><span>Rojo, naranja y amarillo se acercan y dan energía. Azul, verde y violeta se alejan y calman.</span></li>
+        <li><b>Complementarios</b><span>Rojo-verde, azul-naranja, amarillo-violeta. Juntos dan el máximo contraste.</span></li>
+        <li><b>Simbólico</b><span>El rojo puede ser pasión o peligro. El significado depende de la cultura y del contexto.</span></li>
+      </ul>
+      ${h.cuaderno('en la lectura denotativa de cada obra, señalad el centro de interés, el tipo de equilibrio y los colores dominantes.')}`],
+
+    percepcion: ['Cómo miramos: la percepción visual', h => `
+      <p>No vemos las cosas por separado: el cerebro las <b>organiza</b> para encontrarles sentido. La psicología de la <b>Gestalt</b> (Alemania, principios del siglo XX) describió las leyes con las que lo hace.</p>
+      ${h.gestalt()}
+      <ul class="cual">
+        <li><b>Proximidad</b><span>Lo que está cerca se ve como un grupo.</span></li>
+        <li><b>Semejanza</b><span>Lo que se parece (forma, color) se agrupa.</span></li>
+        <li><b>Cierre</b><span>El cerebro completa las formas incompletas.</span></li>
+        <li><b>Figura y fondo</b><span>Separamos lo que destaca de lo que queda detrás. A veces se pueden intercambiar.</span></li>
+      </ul>
+      <p class="tip"><b>En vuestro meme:</b> la figura principal tiene que separarse bien del fondo, y las piezas que van juntas tienen que estar cerca o parecerse.</p>`],
+
     anatomia: ['Anatomía de un meme', h => `
       ${h.fig()}
       <ul class="cual">
@@ -97,67 +266,136 @@
         <li><b>Giro</b><span>La contradicción provoca el humor.</span></li>
       </ul>`],
 
-    historia: ['El arte ya se reía antes de internet', h => `
+    recursos: ['Publicidad: convencer y hacer reír', h => `
+      <p>La publicidad quiere que hagas algo: comprar, votar, pensar de una manera. Para convencerte usa tres tipos de recursos:</p>
       <ul class="cards3">
-        <li><b>Goya</b><span><i>Los Caprichos</i> (1799): sátira de los vicios y del poder de su época.</span></li>
-        <li><b>Daumier</b><span>Caricaturas en la prensa del siglo XIX para criticar la sociedad.</span></li>
-        <li><b>Duchamp</b><span><i>L.H.O.O.Q.</i> (1919): cambiar un icono del arte para provocar.</span></li>
+        <li><b>Formales</b><span>Lo que se ve: composición, color, tipografía y plano.</span></li>
+        <li><b>Lingüísticos</b><span>Lo que se dice: eslogan corto, juego de palabras, rima, preguntas e imperativos («¡Pruébalo!»).</span></li>
+        <li><b>Persuasivos</b><span>Cómo te convence: emoción, humor, deseo, una persona famosa o la sensación de pertenecer al grupo.</span></li>
       </ul>
-      <p>Igual que ellos, vais a partir de una obra conocida y a cambiar su sentido para decir algo nuevo.</p>`],
-
-    fotomontaje: ['Fotomontaje tradicional', h => `
-      <p class="def"><b>Fotomontaje tradicional:</b> recortar fragmentos de distintas imágenes y pegarlos para crear una imagen nueva con otro significado.</p>
-      <ol class="pasos3"><li><b>Recorta</b>Fragmentos de distintas obras: una cabeza, un fondo, un objeto…</li><li><b>Prueba combinaciones</b>Mueve las piezas antes de pegar. Busca el contraste.</li><li><b>Pega con intención</b>Cada pieza tiene que decir algo.</li></ol>
-      <p class="tip"><b>No es juntar por juntar:</b> es hacer que las piezas digan algo.</p>`],
-
-    vistazo: ['Se entiende de un vistazo', h => `
-      <ul class="cards3">
-        <li><b>Contraste</b><span>Grande / pequeño. Serio / absurdo.</span></li>
-        <li><b>Síntesis</b><span>Pocos elementos. Una idea clara.</span></li>
-        <li><b>Texto + imagen</b><span>Juntos dicen algo que solos no dirían.</span></li>
-      </ul>`],
-
-    recursos: ['Convencer y hacer reír', h => `
-      <p>El meme y la publicidad comparten trucos. Estos son los cuatro recursos que vais a usar:</p>
+      <h3 class="sub">Cuatro figuras que comparten el meme y la publicidad</h3>
       <ul class="cual">
         <li><b>Hipérbole</b><span>Exagerar: «Tengo un millón de tareas». ¿Un millón?</span></li>
         <li><b>Ironía</b><span>Decir lo contrario: «Qué bien», cuando se cae internet.</span></li>
         <li><b>Metáfora visual</b><span>Sustituir: una mochila convertida en una montaña.</span></li>
         <li><b>Incongruencia</b><span>Romper la lógica: un rey esperando el autobús.</span></li>
       </ul>
+      <p class="def"><b>Sociedad de consumo:</b> muchos anuncios no venden un producto, venden un deseo (ser feliz, popular, admirado). Un meme crítico puede darle la vuelta a ese mensaje.</p>
       <p class="tip"><b>Para practicar:</b> en la pestaña <b>Recursos</b> tienes el juego «¿Qué recurso es?».</p>`],
 
     estereotipos: ['Humor sí, estereotipos no', h => `
-      <p>Reírse del género, del origen o del cuerpo de alguien repite el sexismo y los cánones corporales que vemos en la publicidad y en los medios. <b>Cuestionad los prejuicios, no a quienes los sufren.</b></p>
-      <p class="ojo"><b>Antes de compartir, preguntaos:</b> ¿de quién nos reímos? ¿Critica una idea o humilla a una persona?</p>`]
+      <p class="def">Un <b>estereotipo</b> es una idea simplificada y repetida sobre un grupo de personas: «las chicas son…», «los de tal sitio son…».</p>
+      <ul class="cards3">
+        <li><b>Roles sexistas</b><span>Anuncios en los que ella limpia y él conduce, o los juguetes van «para niñas» y «para niños».</span></li>
+        <li><b>Cánones corporales</b><span>Cuerpos retocados que casi nadie tiene, presentados como lo normal.</span></li>
+        <li><b>Humor que daña</b><span>Reírse del género, del origen o del cuerpo de alguien repite esos estereotipos.</span></li>
+      </ul>
+      <p><b>Cuestionad los prejuicios, no a quienes los sufren.</b></p>
+      <p class="ojo"><b>Antes de dar por buena vuestra idea, preguntaos:</b> ¿de quién nos reímos? ¿Critica una idea o humilla a una persona?</p>`],
+
+    planos: ['Encuadre, plano y ángulo', h => `
+      <p class="def"><b>Encuadrar</b> es decidir qué queda dentro de la imagen y qué queda fuera. Según lo cerca que estemos, hablamos de distintos <b>planos</b>.</p>
+      ${h.planos()}
+      <ul class="cual cual3">
+        <li><b>Gran plano general</b><span>El lugar. La figura es pequeña: sitúa.</span></li>
+        <li><b>Plano general</b><span>La figura entera en su entorno.</span></li>
+        <li><b>Plano americano</b><span>Hasta las rodillas: figura y acción.</span></li>
+        <li><b>Plano medio</b><span>Hasta la cintura: lo que hace.</span></li>
+        <li><b>Primer plano</b><span>La cara: la emoción.</span></li>
+        <li><b>Plano detalle</b><span>Una parte pequeña que importa.</span></li>
+      </ul>
+      <h3 class="sub">Ángulo: desde dónde miramos</h3>
+      <ul class="cual">
+        <li><b>Normal</b><span>A la altura de los ojos: neutral.</span></li>
+        <li><b>Picado</b><span>Desde arriba: la figura parece pequeña o débil.</span></li>
+        <li><b>Contrapicado</b><span>Desde abajo: la figura parece grande y poderosa.</span></li>
+        <li><b>Aberrante</b><span>Imagen inclinada: inestabilidad, algo va mal.</span></li>
+      </ul>
+      <p><b>Imagen secuenciada:</b> varias imágenes en orden que cuentan una historia, como el cómic, el <i>storyboard</i> o los memes de dos viñetas «lo que espero / lo que pasa».</p>
+      <p class="tip"><b>En vuestro meme:</b> recortar una cara en primer plano o una figura entera cambia lo que cuenta. Un personaje en contrapicado parecerá poderoso; en picado, pequeño.</p>`],
+
+    fotomontaje: ['Fotomontaje tradicional y digital', h => `
+      <p class="def"><b>Fotomontaje:</b> unir fragmentos de distintas fotografías o imágenes para crear una imagen nueva con otro significado.</p>
+      <p><b>Origen:</b> en Berlín, hacia 1918–1920, los dadaístas <b>Hannah Höch</b>, <b>Raoul Hausmann</b> y <b>John Heartfield</b> recortaban fotos de periódicos y revistas para criticar la guerra y la política. Heartfield llevó el fotomontaje a las portadas de revista: del arte al diseño gráfico.</p>
+      <div class="lectura">
+        <div><h3>Tradicional</h3><ul><li>Tijeras, pegamento y reproducciones impresas.</li><li>Las piezas se mueven sobre el papel antes de pegarlas.</li><li>Los bordes del recorte se notan, y eso también expresa.</li></ul></div>
+        <div><h3>Digital</h3><ul><li>La fotografía digital está hecha de <b>píxeles</b>.</li><li>Los programas de edición trabajan por <b>capas</b>.</li><li>Se recorta, se escala y se cambia el color sin dejar huella.</li></ul></div>
+      </div>
+      <ol class="pasos3"><li><b>Recorta</b>Fragmentos de distintas obras: una cabeza, un fondo, un objeto…</li><li><b>Prueba combinaciones</b>Mueve las piezas antes de pegar. Busca el contraste.</li><li><b>Pega con intención</b>Cada pieza tiene que decir algo.</li></ol>
+      <p class="ojo"><b>Una foto también puede mentir.</b> Los montajes digitales se usan para crear bulos. Antes de creer o compartir una imagen, comprobad de dónde sale.</p>
+      <p class="tip"><b>Vosotros trabajáis en tradicional:</b> recortes de reproducciones de obras de arte, en papel.</p>`],
+
+    vistazo: ['Se entiende de un vistazo', h => `
+      <ul class="cards3">
+        <li><b>Contraste</b><span>Grande / pequeño. Serio / absurdo.</span></li>
+        <li><b>Síntesis</b><span>Pocos elementos. Una idea clara.</span></li>
+        <li><b>Texto + imagen</b><span>Juntos dicen algo que solos no dirían.</span></li>
+      </ul>
+      <p class="tip"><b>Prueba del segundo:</b> enseñad el meme a alguien durante un segundo. Si lo entiende, funciona.</p>`],
+
+    proceso: ['El proceso de creación', h => `
+      <p>Un proyecto artístico no sale de golpe: pasa por fases. Así es el vuestro:</p>
+      <ol class="fases-n2">
+        <li><b>Investigar</b><span>Leer las obras.</span><em>Actividad 1</em></li>
+        <li><b>Proyectar</b><span>Qué queremos decir, con qué recurso, para quién y dónde.</span><em>Actividad 2</em></li>
+        <li><b>Bocetar</b><span>Probar varias opciones rápidas.</span><em>Actividad 2</em></li>
+        <li><b>Realizar</b><span>El fotomontaje.</span><em>Actividad 3</em></li>
+        <li><b>Revisar</b><span>¿Se entiende? ¿Hace daño a alguien? Corregir.</span><em>Actividad 3</em></li>
+        <li><b>Presentar</b><span>Contarlo a la clase.</span><em>Actividad 4</em></li>
+        <li><b>Evaluar</b><span>Valorar el proceso y el resultado.</span><em>Actividad 4</em></li>
+      </ol>
+      <h3 class="sub">Tres maneras de evaluar</h3>
+      <ul class="cards3">
+        <li><b>Autorreflexión</b><span>Qué he aprendido, qué me costó y qué cambiaría.</span></li>
+        <li><b>Autoevaluación</b><span>Me pongo nota con la rúbrica.</span></li>
+        <li><b>Coevaluación</b><span>Valoro el trabajo de otras parejas, con argumentos y respeto.</span></li>
+      </ul>
+      <p class="tip"><b>Los errores forman parte del proceso:</b> lo que no funcionó y cómo lo arreglasteis es justo lo que os preguntarán en la presentación.</p>`]
   };
 
   function construir() {
-    const h = { cuaderno: s => `<p class="manual-tip"><b>${ui().cuadernoLabel}</b> ${s}</p>`, fig: figAnatomia };
+    const h = { cuaderno: s => `<p class="manual-tip"><b>${ui().cuadernoLabel}</b> ${s}</p>`, fig: figAnatomia, planos: figPlanos, gestalt: figGestalt };
     const sec = (TR() && TR().sec) || {};
     return ORDEN.map(id => { const x = sec[id] || SEC_ES[id]; return [id, x[0], x[1](h)]; });
   }
   const teoria = {
     html() {
-      const S = construir();
+      const S = Object.fromEntries(construir().map(([id, t, b]) => [id, [t, b]]));
+      const U = ui(); const A = pick('act', ACT_ES).acts;
+      let n = 0; const num = {}; ORDEN.forEach(id => num[id] = String(++n).padStart(2, '0'));
       return `
       <div class="teoria" style="--c:var(--rosa)">
-        <nav class="toc" aria-label="${ui().tocAria}">
-          <p class="toc-t">${ui().indice}</p>
-          ${S.map(([id, t], i) => `<button type="button" data-go="${id}"><span>${String(i + 1).padStart(2, '0')}</span>${t}</button>`).join('')}
+        <nav class="toc" aria-label="${U.tocAria}">
+          <p class="toc-t">${U.indice}</p>
+          ${DIAS.map(([ids], d) => `<p class="toc-dia">${U.diaK} ${d + 1}</p>${ids.map(id => `<button type="button" data-go="${id}"><span>${num[id]}</span>${S[id][0]}</button>`).join('')}`).join('')}
         </nav>
         <div class="doc">
-          ${S.map(([id, t, body], i) => `
+          <p class="dias-intro">${U.diasIntro}</p>
+          ${DIAS.map(([ids, acts], d) => `
+          <section class="dia" aria-labelledby="dia-${d + 1}">
+            <header class="dia-h"><span class="dia-k">${U.diaK} ${d + 1}</span><h2 id="dia-${d + 1}">${U.dias[d]}</h2></header>
+            <div class="dia-meta"><span class="dia-min">⏱ ${U.minutos}</span><span>${U.prepara}:</span>${acts.map(a => `<button type="button" class="dia-act" data-act="${a}">${U.actK} ${a + 1} · ${A[a][0]}</button>`).join('')}</div>
+            ${ids.map(id => `
             <section class="tsec" id="t-${id}">
-              <h2><span class="sn">${String(i + 1).padStart(2, '0')}</span>${t}</h2>
-              ${body}
+              <h2><span class="sn">${num[id]}</span>${S[id][0]}</h2>
+              <p class="saberes"><span class="saber-k">${U.saberK}</span>${SABER[id].map(s => `<span>${s}</span>`).join('')}</p>
+              ${S[id][1]}
+              ${bloqueVideos(id)}
             </section>`).join('')}
+          </section>`).join('')}
+          <p class="v-subt">${U.subt}</p>
         </div>
       </div>`;
     },
     init(root) {
+      const suave = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
       root.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () =>
-        root.querySelector('#t-' + b.dataset.go).scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })));
+        root.querySelector('#t-' + b.dataset.go).scrollIntoView({ behavior: suave, block: 'start' })));
+      root.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => {
+        const tab = document.querySelector('.view.on .tab[data-k="actividades"]'); if (!tab) return;
+        tab.click();
+        setTimeout(() => { const li = document.querySelectorAll('.view.on .act-list > li')[+b.dataset.act]; if (li) li.scrollIntoView({ behavior: suave, block: 'start' }); }, 80);
+      }));
     }
   };
 
@@ -330,6 +568,9 @@
       return `
       <div class="recursos" style="--c:var(--rosa)">
         ${quiz.html()}
+        <section class="videos" aria-labelledby="vid-t"><h2 id="vid-t" class="sub-vid">${ui().videosT}</h2><p class="v-intro">${ui().videosP}</p>
+          ${DIAS.map(([ids], d) => { const v = ids.flatMap(id => VIDEOS[id] || []); return v.length ? `<h3>${ui().diaK} ${d + 1} · ${ui().dias[d]}</h3><ul>${v.map(ytLink).join('')}</ul>` : ''; }).join('')}
+          <p class="v-subt">${ui().subt}</p></section>
       </div>`;
     },
     init(root) { quiz.init(root); }
