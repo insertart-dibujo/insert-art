@@ -219,7 +219,7 @@ ol.fases-n2.f8 em{display:none}
     };
 
     window.CONTENIDOS = window.CONTENIDOS || {};
-    window.CONTENIDOS[id] = { mision, teoria, actividades, recursos, rubrica };
+    window.CONTENIDOS[id] = { mision, teoria, actividades, recursos, rubrica, tiene: l => l === 'es' || !!window[ns][l] };
   }
 
   window.NIVEL = { crear };

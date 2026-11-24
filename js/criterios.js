@@ -4,7 +4,8 @@
     es: { obj: 'Objetivo', pasos: 'Paso a paso', donde: 'Dónde', entrega: 'Entrega', evalua: 'Qué se evalúa en esta actividad', criterio: 'Criterio', enAct: 'Se evalúa en', act: 'Actividad', ils: 'Indicadores de logro que salen de este criterio:' },
     en: { obj: 'Goal', pasos: 'Step by step', donde: 'Where', entrega: 'Hand-in', evalua: 'What is assessed in this activity', criterio: 'Criterion', enAct: 'Assessed in', act: 'Activity', ils: 'Achievement indicators that come from this criterion:' },
     fr: { obj: 'Objectif', pasos: 'Étape par étape', donde: 'Où', entrega: 'Rendu', evalua: 'Ce qui est évalué dans cette activité', criterio: 'Critère', enAct: 'Évalué dans', act: 'Activité', ils: 'Indicateurs de réussite issus de ce critère :' },
-    ru: { obj: 'Цель', pasos: 'Шаг за шагом', donde: 'Где', entrega: 'Сдача', evalua: 'Что оценивается в этом задании', criterio: 'Критерий', enAct: 'Оценивается в', act: 'Задание', ils: 'Показатели, которые вытекают из этого критерия:' }
+    ru: { obj: 'Цель', pasos: 'Шаг за шагом', donde: 'Где', entrega: 'Сдача', evalua: 'Что оценивается в этом задании', criterio: 'Критерий', enAct: 'Оценивается в', act: 'Задание', ils: 'Показатели, которые вытекают из этого критерия:' },
+    ar: { obj: 'الهدف', pasos: 'خطوة بخطوة', donde: 'فين', entrega: 'شنو كتسلّم', evalua: 'شنو كيتقيّم ف هاد النشاط', criterio: 'المعيار', enAct: 'كيتقيّم ف', act: 'النشاط', ils: 'مؤشرات النجاح اللي خارجين من هاد المعيار:' },
   };
   const t = () => T[(window.I18N && window.I18N.lang) || 'es'] || T.es;
 

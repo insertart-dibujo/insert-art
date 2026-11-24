@@ -16,9 +16,9 @@
   --rosa:#ff5ad8;
   --fucsia:#ff1a6e;
   --fluor:#e8ff2a;
-  --marker:'Permanent Marker','Caveat',cursive;
-  --pixel:'Press Start 2P',monospace;
-  --body:'Rubik',system-ui,sans-serif;
+  --marker:'Permanent Marker','Caveat','Noto Kufi Arabic',cursive;
+  --pixel:'Press Start 2P','Noto Kufi Arabic',monospace;
+  --body:'Rubik','Noto Sans Arabic',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -498,6 +498,20 @@ ul.cards3 span{font-size:15px;opacity:.85}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
+
+/* ===== Dariya (árabe marroquí): de derecha a izquierda ===== */
+:lang(ary){letter-spacing:0!important;word-spacing:normal}
+:lang(ary) *{letter-spacing:0!important}
+[dir=rtl] .toc button{text-align:right;border-left:0;border-right:3px solid transparent}
+[dir=rtl] .toc button:hover,[dir=rtl] .toc button.on{border-right-color:var(--c)}
+[dir=rtl] .def,[dir=rtl] .act-intro{border-left:0;border-right:4px solid var(--rosa)}
+[dir=rtl] .steps-list{padding-left:0;padding-right:26px}
+[dir=rtl] .poster{text-align:right}
+[dir=rtl] .toc button span{margin-right:0;margin-left:8px}
+[dir=rtl] .level-head .pj{right:auto;left:clamp(16px,5vw,70px);transform:rotate(-5deg)}
+[dir=rtl] .poster .pj{right:auto;left:-14px}
+[dir=ltr] .def,[dir=ltr] .act-intro{border-right:0}
+.no-trad{font-size:15px;border:2px dashed var(--fluor);padding:10px 14px;margin-bottom:16px;max-width:70ch}
 </style>
 </head>
 <body>
@@ -511,7 +525,7 @@ ul.cards3 span{font-size:15px;opacity:.85}
   </nav>
   <button type="button" id="sfx-toggle" class="sfx" aria-label="Sonido" title="Sonido">🔊</button>
   <div class="langs" role="group" aria-label="Idioma">
-    <button type="button" data-lang="es" lang="es" title="Español">ES</button><button type="button" data-lang="en" lang="en" title="English">EN</button><button type="button" data-lang="fr" lang="fr" title="Français">FR</button><button type="button" data-lang="ru" lang="ru" title="Русский">RU</button>
+    <button type="button" data-lang="es" lang="es" title="Español">ES</button><button type="button" data-lang="en" lang="en" title="English">EN</button><button type="button" data-lang="fr" lang="fr" title="Français">FR</button><button type="button" data-lang="ru" lang="ru" title="Русский">RU</button><button type="button" data-lang="ar" lang="ary" dir="rtl" title="الدارجة المغربية · árabe marroquí">AR</button>
   </div>
 </header>
 
@@ -603,6 +617,7 @@ ul.cards3 span{font-size:15px;opacity:.85}
 <script src="contenidos/pepa2-n2.en.js"></script>
 <script src="contenidos/pepa2-n2.fr.js"></script>
 <script src="contenidos/pepa2-n2.ru.js"></script>
+<script src="contenidos/pepa2-n2.ar.js"></script>
 <script src="contenidos/exp4-n1.js"></script>
 <script src="contenidos/exp4-n1.en.js"></script>
 <script src="contenidos/exp4-n1.fr.js"></script>
@@ -843,8 +858,12 @@ function pintarNivel(m, j){
   v.style.setProperty("--c", m.c);
   const [cl,txt] = estado(n[2],n[3]);
   const L = U().nivelCorto;
-  const prev = j>0 ? `<a href="#${m.id}-n${j}">◂ ${L} ${pad(j)}</a>` : `<a class="ghost" aria-hidden="true">·</a>`;
-  const next = j<m.niveles.length-1 ? `<a href="#${m.id}-n${j+2}">${L} ${pad(j+2)} ▸</a>` : `<a class="ghost" aria-hidden="true">·</a>`;
+  const [fA,fS] = I18N.rtl() ? ["▸","◂"] : ["◂","▸"];
+  const prev = j>0 ? `<a href="#${m.id}-n${j}">${fA} ${L} ${pad(j)}</a>` : `<a class="ghost" aria-hidden="true">·</a>`;
+  const next = j<m.niveles.length-1 ? `<a href="#${m.id}-n${j+2}">${L} ${pad(j+2)} ${fS}</a>` : `<a class="ghost" aria-hidden="true">·</a>`;
+  const cont = (window.CONTENIDOS || {})[`${m.id}-n${j+1}`] || {};
+  /* unidades sin traducción a este idioma: se muestran en español, de izquierda a derecha */
+  const sinTrad = Object.keys(cont).length && (cont.tiene ? !cont.tiene(I18N.lang) : I18N.lang === "ar");
   const ini = tomarPestana("mision");
   v.innerHTML = `
     <div class="level-head">
@@ -861,13 +880,12 @@ function pintarNivel(m, j){
     </div>
     ${tabsHTML(PESTANAS_NIVEL(),ini,"n")}
     <div class="panel-wrap">
-      ${aviso()}
-      <div id="n-panel"></div>
+      ${sinTrad ? `<p class="no-trad">${U().sinTrad}</p>` : aviso()}
+      <div id="n-panel"${sinTrad ? ' dir="ltr" lang="es"' : ''}></div>
       <nav class="level-nav" aria-label="${U().otros}">${prev}${next}</nav>
     </div>`;
   const o = U().o;
   const textos = { mision:o.mision, teoria:o.teoria, actividades:o.actividades(cuadernoDe(m).toLowerCase()), recursos:o.recursos, rubrica:o.rubrica };
-  const cont = (window.CONTENIDOS || {})[`${m.id}-n${j+1}`] || {};
   const render = k => {
     const p = $("#n-panel");
     if (cont[k]) { p.innerHTML = cont[k].html(); cont[k].init && cont[k].init(p); }

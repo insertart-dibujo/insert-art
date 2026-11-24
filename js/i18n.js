@@ -1,6 +1,8 @@
-/* INSERT ART · Idiomas: español (es), inglés (en), francés (fr), ruso (ru) */
+/* INSERT ART · Idiomas: español (es), inglés (en), francés (fr), ruso (ru), árabe marroquí (ar: dariya, de derecha a izquierda) */
 (function () {
-  const LANGS = { es: 'ES', en: 'EN', fr: 'FR', ru: 'RU' };
+  const LANGS = { es: 'ES', en: 'EN', fr: 'FR', ru: 'RU', ar: 'AR' };
+  /* código HTML y dirección de cada idioma (ary = árabe marroquí) */
+  const HTML_LANG = { ar: 'ary' }, RTL = { ar: true };
   const UI = {
     es: {
       langLabel: 'Idioma', materias: 'Materias', manual: 'Manual', credits: 'CRÉDITOS',
@@ -129,6 +131,39 @@
       meses: ['янв.', 'фев.', 'мар.', 'апр.', 'мая', 'июн.', 'июл.', 'авг.', 'сен.', 'окт.', 'нояб.', 'дек.'],
       p: { pulsa: 'Нажми ▶, чтобы увидеть построение шаг за шагом.', paso: 'Шаг', PASO: 'ШАГ', listo: 'ГОТОВО', play: '▶ Запустить', pausa: '❚❚ Пауза', repetir: '⟲ Повторить', video: '▶ Смотреть видео на YouTube', reset: 'Начать заново', prev: 'Предыдущий шаг', next: 'Следующий шаг' },
       aviso: 'Перевод с испанского. Если что-то непонятно, спроси учителя.'
+    },
+    ar: {
+      langLabel: 'اللغة', materias: 'المواد', manual: 'الدليل', credits: 'النقط',
+      tag: 'الموقع ديال مادة الرسم ف IES Nueva Andalucía. ختار المادة ديالك، دخل للمستوى ديالك، وغادي تلقى الدروس، الأنشطة والروبريك (شبكة التقييم).',
+      foot1: 'IES NUEVA ANDALUCÍA · قسم الفنون', foot2: 'الأستاذ: LUIS ALBERTO DELGADO MÁRQUEZ',
+      elige: 'ختار المادة ديالك', manualBtn: 'دليل اللاعب', mundo: 'العالم', niveles: 'المستويات', nivel: 'المستوى', nivelCorto: 'المستوى',
+      cambiar: '▸ بدّل المادة', descMateria: (n, k) => `${n}. ${k} ديال المستويات مقسومين على تلاتة ديال الفصول.`,
+      tMapa: 'خريطة المستويات', tMaterial: 'الأدوات', tEval: 'كيفاش كيتقيّم الخدمة', cuadernoArt: 'دفتر الفنان (cuaderno de artista)', manualDT: 'دليل الرسم التقني (Manual de DT)',
+      trim: ['الفصل الأول', 'الفصل التاني', 'الفصل التالت'],
+      st: { done: 'دازت', live: 'خدامين عليها دابا', locked: 'مسدودة' },
+      mapaDe: m => `▸ خريطة ${m}`, otros: 'مستويات أخرين',
+      tabsNivel: { mision: 'المهمة', teoria: 'الدرس', actividades: 'الأنشطة', recursos: 'الموارد', rubrica: 'التقييم' },
+      obras: 'باقي كنخدمو عليها',
+      o: {
+        material: 'هنا غادي تكون لائحة الأدوات اللي خاصاك ف هاد المادة.',
+        evaluacion: 'هنا غادي يكونو معايير التنقيط مشروحين بطريقة ساهلة.',
+        cuadernoDT: 'هنا غادي يكون كيفاش تنظم دليل الرسم التقني ديالك.', cuaderno: 'هنا غادي يكون كيفاش تنظم دفتر الفنان ديالك.',
+        mision: 'هنا غادي يكون التحدي ديال هاد المستوى والخدمة النهائية اللي غادي تصاوب.',
+        teoria: 'هنا غادي يكون الدرس ديال الوحدة باش تشوفو وقتما بغيتي.',
+        actividades: c => `هنا غادي يكونو الأنشطة حصة بحصة، حتى ديال ${c}.`,
+        recursos: 'هنا غادي يكونو الروابط ديال العروض، الفيديوهات والوثائق.',
+        rubrica: 'هنا غادي يكون التقييم: شنو كيتقيّم وكيفاش توصل لكل مستوى.',
+        normas: 'هنا غادي يكونو القوانين ديال قاعة الفنون (aula de plástica) والأدوات.',
+        materialComun: 'هنا غادي تكون الأدوات اللي كتخدم بيها ف جميع المواد.',
+        cuadernoManual: 'هنا غادي يكون شنو هو دفتر الفنان وكيفاش تخدم فيه.',
+        classroom: 'هنا غادي يكون كيفاش تسلّم الخدمة ف Classroom وتنظم الدوسي ديالك ف Drive.'
+      },
+      manualTitle: 'دليل اللاعب', manualDesc: 'الحوايج اللي كتنفع ف جميع مواد الرسم.', volver: '▸ رجع للمواد',
+      tabsManual: { normas: 'قوانين قاعة الفنون', material: 'الأدوات المشتركة', cuaderno: 'دفتر الفنان', classroom: 'التسليم و Classroom' },
+      meses: ['يناير', 'فبراير', 'مارس', 'أبريل', 'ماي', 'يونيو', 'يوليوز', 'غشت', 'شتنبر', 'أكتوبر', 'نونبر', 'دجنبر'],
+      p: { pulsa: 'ورك على ▶ باش تشوف الرسم خطوة بخطوة.', paso: 'الخطوة', PASO: 'الخطوة', listo: 'سالا', play: '▶ شغّل', pausa: '❚❚ وقّف', repetir: '⟲ عاود', video: '▶ شوف الفيديو ف YouTube', reset: 'بدا من الأول', prev: 'الخطوة اللي قبل', next: 'الخطوة اللي من بعد' },
+      aviso: 'مترجم من الإسبانية للدارجة المغربية. الكلمات المهمة عندهم السمية بالإسبانية بين قوسين، حيت هي اللي كيستعمل الأستاذ ف القسم. إلا ما فهمتيش شي حاجة، سول الأستاذ.',
+      sinTrad: 'هاد الوحدة باقي ما تترجماتش للدارجة. كتبان بالإسبانية.'
     }
   };
 
@@ -136,7 +171,8 @@
   const NOMBRES = {
     en: { epva1: 'Visual and Audiovisual Arts', pepa2: 'Visual and Audiovisual Arts Project', epva3: 'Visual and Audiovisual Arts', dt4: 'Technical Drawing', exp4: 'Artistic Expression' },
     fr: { epva1: 'Arts plastiques, visuels et audiovisuels', pepa2: 'Projet d’arts plastiques et audiovisuels', epva3: 'Arts plastiques, visuels et audiovisuels', dt4: 'Dessin technique', exp4: 'Expression artistique' },
-    ru: { epva1: 'Изобразительное и аудиовизуальное искусство', pepa2: 'Проект по изобразительному и аудиовизуальному искусству', epva3: 'Изобразительное и аудиовизуальное искусство', dt4: 'Техническое черчение', exp4: 'Художественное выражение' }
+    ru: { epva1: 'Изобразительное и аудиовизуальное искусство', pepa2: 'Проект по изобразительному и аудиовизуальному искусству', epva3: 'Изобразительное и аудиовизуальное искусство', dt4: 'Техническое черчение', exp4: 'Художественное выражение' },
+    ar: { epva1: 'التربية التشكيلية والبصرية والسمعية البصرية', pepa2: 'مشروع التربية التشكيلية والبصرية والسمعية البصرية', epva3: 'التربية التشكيلية والبصرية والسمعية البصرية', dt4: 'الرسم التقني', exp4: 'التعبير الفني' }
   };
   const NIVELES = {
     en: {
@@ -159,6 +195,9 @@
       epva3: ['Исторический триптих', 'Воображаемые двери школы', 'Цвет и восприятие', 'Правда или фейк? Читаем изображения', 'Узоры аль-Андалуса', 'От плоскости к объёму', 'Взгляды в движении'],
       dt4: ['Природная геометрия: золотая упаковка', 'Насридская плитка', 'Фирменные кривые', 'Пространство в двух плоскостях', 'Школа в перспективе', 'Технический лист', 'Спроектируй свою школу'],
       exp4: ['Зелья', 'Графический юмор', 'Ненастоящая еда для творческого голода', 'Художники и ремесленники', 'Эфемерная скульптура', 'Ролик против фейков и стереотипов', 'Стены с голосом', 'Промо-видео ESO']
+    },
+    ar: {
+      pepa2: ['ملصق 25N: شوف بحال Javier Jaén', 'طبعات الشتا', 'الضو اللي كيرسم', 'الحيط ديال الثانوية', 'حكايات الثانوية', 'حياة تانية', 'كنحيّو الثانوية']
     }
   };
 
@@ -173,12 +212,17 @@
       if (!UI[l] || l === lang) return;
       lang = l;
       try { localStorage.setItem('insertart-lang', l); } catch (e) { }
-      document.documentElement.lang = l;
+      aplicar();
       listeners.forEach(fn => fn(l));
     },
     on(fn) { listeners.push(fn); },
     nombre(m) { return (NOMBRES[lang] || {})[m.id] || m.nombre; },
+    rtl: () => !!RTL[lang],
     nivel(m, j) { return ((NIVELES[lang] || {})[m.id] || [])[j] || m.niveles[j][0]; }
   };
-  document.documentElement.lang = lang;
+  function aplicar() {
+    document.documentElement.lang = HTML_LANG[lang] || lang;
+    document.documentElement.dir = RTL[lang] ? 'rtl' : 'ltr';
+  }
+  aplicar();
 })();
