@@ -1,5 +1,6 @@
 /* INSERT ART · Motor común de niveles (misión, teoría por días, actividades, recursos y rúbrica)
-   Cada nivel aporta solo sus datos: NIVEL.crear({ id, ns, color, ES, DIAS, SABER, VIDEOS, ACT_IL, figs, players }) */
+   Cada nivel aporta solo sus datos: NIVEL.crear({ id, ns, color, ES, DIAS, SABER, VIDEOS, ACT_IL, figs, players, init })
+   init(root, pestaña): opcional, para juegos y herramientas interactivas propias de un nivel */
 (function () {
   const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -43,7 +44,7 @@ ol.fases-n2.f8 em{display:none}
   }
 
   function crear(cfg) {
-    const { id, ns, color = 'var(--rosa)', ES, DIAS, SABER = {}, VIDEOS = {}, ACT_IL = [], figs = {}, players = {} } = cfg;
+    const { id, ns, color = 'var(--rosa)', ES, DIAS, SABER = {}, VIDEOS = {}, ACT_IL = [], figs = {}, players = {}, init: extraInit } = cfg;
     window[ns] = window[ns] || {};
     const TR = () => window[ns][window.I18N.lang] || null;
     const L = s => { const d = TR(); return (d && d.t && d.t[s]) || s; };
@@ -117,6 +118,7 @@ ol.fases-n2.f8 em{display:none}
           setTimeout(() => { const li = document.querySelectorAll('.view.on .act-list > li')[+b.dataset.act]; if (li) li.scrollIntoView({ behavior: suave, block: 'start' }); }, 80);
         }));
         if (window.GEO && root.querySelector('[data-player]')) window.GEO.initPlayers(root);
+        if (extraInit) extraInit(root, 'teoria');
       }
     };
 
@@ -178,6 +180,7 @@ ol.fases-n2.f8 em{display:none}
           boxes.forEach(b => b.checked = false); guardar([]); pintar(); armado = false; del.textContent = A.borrar;
         });
         pintar();
+        if (extraInit) extraInit(root, 'actividades');
       }
     };
 
