@@ -196,7 +196,16 @@
           <li><b>Its colour</b><span>Its element, its colour range and where the complementary colour is.</span></li>
           <li><b>My card</b><span>How you have arranged the visual hierarchy and the composition.</span></li>
         </ul>
-        <p class="ojo">The whole group’s cards form <b>the class deck</b>. Your creature may appear again in other units.</p>`]
+        <p class="ojo">The whole group’s cards form <b>the class deck</b>. Your creature may appear again in other units.</p>`],
+      arena: ['The bestiary arena', h => `
+        <p>Put your beast to the test: write its features as if you were filling in its card and face a classmate’s beast (or the computer), turn by turn, like in a card battle.</p>
+        <ul class="cards3">
+          <li><b>Shape matters</b><span>Circle: more life (friendly and tough). Square: more defence (strong). Triangle: more attack (dangerous).</span></li>
+          <li><b>Colour is a code</b><span>The beast is painted automatically with its element’s palette: 3 base colours and eyes in the complementary colour, like the focal point.</span></li>
+          <li><b>Stats</b><span>Share out 15 points between attack, defence and speed. The faster one starts.</span></li>
+        </ul>
+        ${h.fig('arena')}
+        <p class="tip"><b>Use your card’s data:</b> the same name, element, shape and power you designed. If your beast always loses, what would you change in its design?</p>`]
     },
     mision: {
       titulo: 'Card bestiary',
@@ -338,6 +347,28 @@
         ejes: [['Composition', 'IL 3.7'], ['Techniques', 'IL 3.8'], ['Sketchbook to card', 'IL 3.9'], ['Colour and hierarchy', 'IL 3.10'], ['Oral presentation', 'IL 3.11']],
         rondas: ['1st review', '2nd review']
       }
+    },
+    arena: {
+      titulo: 'The bestiary arena', modos: ['2 players', 'Against the computer'],
+      intro: 'Create both beasts and press “Fight!”. Nothing is saved: when you close the page, the beasts disappear.',
+      jugador: 'Player', maquina: 'computer',
+      campos: { nombre: 'Name', elem: 'Element', forma: 'Shape', poder: 'Name of its power' },
+      elementos: { fuego: 'Fire', agua: 'Water', planta: 'Plant', tierra: 'Earth', aire: 'Air', sombra: 'Shadow' },
+      formas: { circulo: 'Circle (friendly)', cuadrado: 'Square (strong)', triangulo: 'Triangle (dangerous)' },
+      bonus: { circulo: 'Shape bonus: +10 life.', cuadrado: 'Shape bonus: +2 defence.', triangulo: 'Shape bonus: +2 attack.' },
+      stats: { atq: 'Attack', def: 'Defence', vel: 'Speed' },
+      puntos: n => n >= 0 ? `Points left: ${n}` : `${-n} point${n === -1 ? '' : 's'} too many`,
+      ejemplo: [['Lynxblaze', 'fuego', 'triangulo', 'Burning claw'], ['Chamelivy', 'planta', 'circulo', 'Vine tongue']],
+      ventajasT: 'Element advantage table',
+      razon: { fuego: 'fire burns plants', planta: 'plants drink water', agua: 'water puts out fire', aire: 'wind wears away earth', tierra: 'earth buries shadow', sombra: 'shadow swallows the air' },
+      luchar: 'Fight!', errorFicha: (j, p) => `Check player ${j}’s beast: it needs a name and a power, and ${p} points at most.`,
+      empieza: n => `The battle begins! ${n} is faster and attacks first.`,
+      turnoDe: n => `<b>${n}</b>’s turn. Choose a move:`, piensa: n => `${n} is thinking…`,
+      ataqueDe: e => `${e} attack`, usado: 'used', defender: 'Defend',
+      usa: (n, m, d) => `${n} uses <b>${m}</b>: ${d} damage.`, falla: n => `${n} launches its special attack… and misses!`,
+      defiende: (n, c) => `${n} defends${c ? ` and recovers ${c} life` : ''}.`,
+      critico: 'Critical hit!', eficaz: r => `It’s super effective! (${r})`, poco: 'It’s not very effective…',
+      gana: n => `🏆 ${n} wins the battle!`, revancha: 'Rematch', editar: 'Change the beasts'
     },
     juego: {
       titulo: 'Light or pigment?', modos: ['Light · additive', 'Pigment · subtractive'],

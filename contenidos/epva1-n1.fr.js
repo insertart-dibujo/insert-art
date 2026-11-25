@@ -196,7 +196,16 @@
           <li><b>Sa couleur</b><span>Son élément, sa gamme et où se trouve la complémentaire.</span></li>
           <li><b>Ma carte</b><span>Comment tu as organisé la hiérarchie visuelle et la composition.</span></li>
         </ul>
-        <p class="ojo">Les cartes de tout le groupe forment <b>le jeu de la classe</b>. Ta créature pourra réapparaître dans d’autres unités.</p>`]
+        <p class="ojo">Les cartes de tout le groupe forment <b>le jeu de la classe</b>. Ta créature pourra réapparaître dans d’autres unités.</p>`],
+      arena: ['L’arène du bestiaire', h => `
+        <p>Mets ta bête à l’épreuve : écris ses caractéristiques comme si tu remplissais sa carte et affronte la bête d’un camarade (ou l’ordinateur), tour par tour, comme dans un combat de cartes.</p>
+        <ul class="cards3">
+          <li><b>La forme compte</b><span>Cercle : plus de vie (gentil et résistant). Carré : plus de défense (fort). Triangle : plus d’attaque (dangereux).</span></li>
+          <li><b>La couleur est un code</b><span>La bête se colorie toute seule avec la palette de son élément : 3 couleurs de base et les yeux dans la complémentaire, comme le point d’attention.</span></li>
+          <li><b>Statistiques</b><span>Répartis 15 points entre attaque, défense et vitesse. Le plus rapide commence.</span></li>
+        </ul>
+        ${h.fig('arena')}
+        <p class="tip"><b>Utilise les données de ta carte :</b> le même nom, élément, forme et pouvoir que tu as conçus. Si ta bête perd toujours, que changerais-tu dans son design ?</p>`]
     },
     mision: {
       titulo: 'Bestiaire de cartes',
@@ -338,6 +347,28 @@
         ejes: [['Composition', 'IL 3.7'], ['Techniques', 'IL 3.8'], ['Du carnet à la carte', 'IL 3.9'], ['Couleur et hiérarchie', 'IL 3.10'], ['Présentation orale', 'IL 3.11']],
         rondas: ['1re révision', '2e révision']
       }
+    },
+    arena: {
+      titulo: 'L’arène du bestiaire', modos: ['2 joueurs', 'Contre l’ordinateur'],
+      intro: 'Crée les deux bêtes et appuie sur « Au combat ! ». Rien n’est enregistré : en fermant la page, les bêtes disparaissent.',
+      jugador: 'Joueur', maquina: 'ordinateur',
+      campos: { nombre: 'Nom', elem: 'Élément', forma: 'Forme', poder: 'Nom de son pouvoir' },
+      elementos: { fuego: 'Feu', agua: 'Eau', planta: 'Plante', tierra: 'Terre', aire: 'Air', sombra: 'Ombre' },
+      formas: { circulo: 'Cercle (gentil)', cuadrado: 'Carré (fort)', triangulo: 'Triangle (dangereux)' },
+      bonus: { circulo: 'Bonus de forme : +10 de vie.', cuadrado: 'Bonus de forme : +2 de défense.', triangulo: 'Bonus de forme : +2 d’attaque.' },
+      stats: { atq: 'Attaque', def: 'Défense', vel: 'Vitesse' },
+      puntos: n => n >= 0 ? `Points à répartir : ${n}` : `${-n} point${n === -1 ? '' : 's'} de trop`,
+      ejemplo: [['Lynxardent', 'fuego', 'triangulo', 'Griffe brûlante'], ['Caméliane', 'planta', 'circulo', 'Langue liane']],
+      ventajasT: 'Tableau des avantages entre éléments',
+      razon: { fuego: 'le feu brûle la plante', planta: 'la plante boit l’eau', agua: 'l’eau éteint le feu', aire: 'le vent érode la terre', tierra: 'la terre ensevelit l’ombre', sombra: 'l’ombre avale l’air' },
+      luchar: 'Au combat !', errorFicha: (j, p) => `Vérifie la bête du joueur ${j} : il faut un nom et un pouvoir, et ${p} points au maximum.`,
+      empieza: n => `Le combat commence ! ${n} est plus rapide et attaque en premier.`,
+      turnoDe: n => `Au tour de <b>${n}</b>. Choisis une action :`, piensa: n => `${n} réfléchit…`,
+      ataqueDe: e => `Attaque ${({ Feu: 'de feu', Eau: 'd’eau', Plante: 'de plante', Terre: 'de terre', Air: 'd’air', Ombre: 'd’ombre' })[e] || e}`, usado: 'utilisée', defender: 'Se défendre',
+      usa: (n, m, d) => `${n} utilise <b>${m}</b> : ${d} de dégâts.`, falla: n => `${n} lance son attaque spéciale… et rate !`,
+      defiende: (n, c) => `${n} se protège${c ? ` et récupère ${c} de vie` : ''}.`,
+      critico: 'Coup critique !', eficaz: r => `C’est super efficace ! (${r})`, poco: 'Ce n’est pas très efficace…',
+      gana: n => `🏆 ${n} gagne le combat !`, revancha: 'Revanche', editar: 'Changer les bêtes'
     },
     juego: {
       titulo: 'Lumière ou pigment ?', modos: ['Lumière · additive', 'Pigment · soustractive'],

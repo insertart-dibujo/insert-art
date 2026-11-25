@@ -60,6 +60,7 @@
 
   /* Huecos que rellena init() */
   const figJuego = () => `<div class="mix-game" data-mix></div>`;
+  const figArena = () => `<div class="mix-game ar-game" data-arena></div>`;
 
   const ES = {
     t: {},
@@ -260,7 +261,16 @@
           <li><b>Su color</b><span>Su elemento, su gama y dónde está el complementario.</span></li>
           <li><b>Mi carta</b><span>Cómo has ordenado la jerarquía visual y la composición.</span></li>
         </ul>
-        <p class="ojo">Las cartas de todo el grupo forman <b>el mazo de la clase</b>. Tu criatura podrá volver a aparecer en otras unidades.</p>`]
+        <p class="ojo">Las cartas de todo el grupo forman <b>el mazo de la clase</b>. Tu criatura podrá volver a aparecer en otras unidades.</p>`],
+      arena: ['La arena del bestiario', h => `
+        <p>Pon a prueba tu bestia: escribe sus características como si rellenaras su carta y enfréntala a la de un compañero (o a la máquina), por turnos, como en un combate de cartas.</p>
+        <ul class="cards3">
+          <li><b>La forma cuenta</b><span>Círculo: más vida (amable y resistente). Cuadrado: más defensa (fuerte). Triángulo: más ataque (peligroso).</span></li>
+          <li><b>El color es un código</b><span>La bestia se pinta sola con la paleta de su elemento: 3 colores base y los ojos en el complementario, como el punto de atención.</span></li>
+          <li><b>Estadísticas</b><span>Reparte 15 puntos entre ataque, defensa y velocidad. Quien es más rápido empieza.</span></li>
+        </ul>
+        ${h.fig('arena')}
+        <p class="tip"><b>Usa los datos de tu carta:</b> el mismo nombre, elemento, forma y poder que diseñaste. Si tu bestia pierde siempre, ¿qué cambiarías en su diseño?</p>`]
     },
 
     mision: {
@@ -409,6 +419,30 @@
       }
     },
 
+    /* ---------- arena del bestiario ---------- */
+    arena: {
+      titulo: 'La arena del bestiario', modos: ['2 jugadores', 'Contra la máquina'],
+      intro: 'Crea las dos bestias y pulsa «¡A luchar!». Nada se guarda: al cerrar la página, las bestias desaparecen.',
+      jugador: 'Jugador', maquina: 'máquina',
+      campos: { nombre: 'Nombre', elem: 'Elemento', forma: 'Forma', poder: 'Nombre de su poder' },
+      elementos: { fuego: 'Fuego', agua: 'Agua', planta: 'Planta', tierra: 'Tierra', aire: 'Aire', sombra: 'Sombra' },
+      formas: { circulo: 'Círculo (amable)', cuadrado: 'Cuadrado (fuerte)', triangulo: 'Triángulo (peligroso)' },
+      bonus: { circulo: 'Bonus de la forma: +10 de vida.', cuadrado: 'Bonus de la forma: +2 de defensa.', triangulo: 'Bonus de la forma: +2 de ataque.' },
+      stats: { atq: 'Ataque', def: 'Defensa', vel: 'Velocidad' },
+      puntos: n => n >= 0 ? `Puntos por repartir: ${n}` : `Te has pasado ${-n} punto${n === -1 ? '' : 's'}`,
+      ejemplo: [['Lincecalda', 'fuego', 'triangulo', 'Zarpazo ardiente'], ['Camaleoñola', 'planta', 'circulo', 'Lengua enredadera']],
+      ventajasT: 'Tabla de ventajas entre elementos',
+      razon: { fuego: 'el fuego quema la planta', planta: 'la planta bebe el agua', agua: 'el agua apaga el fuego', aire: 'el viento erosiona la tierra', tierra: 'la tierra sepulta la sombra', sombra: 'la sombra se traga el aire' },
+      luchar: '¡A luchar!', errorFicha: (j, p) => `Revisa la bestia del jugador ${j}: necesita nombre y poder, y como mucho ${p} puntos.`,
+      empieza: n => `¡Empieza el combate! ${n} es más rápido y ataca primero.`,
+      turnoDe: n => `Turno de <b>${n}</b>. Elige un movimiento:`, piensa: n => `${n} está pensando…`,
+      ataqueDe: e => `Ataque de ${e.toLowerCase()}`, usado: 'usado', defender: 'Defender',
+      usa: (n, m, d) => `${n} usa <b>${m}</b>: ${d} de daño.`, falla: n => `${n} lanza su ataque especial… ¡y falla!`,
+      defiende: (n, c) => `${n} se protege${c ? ` y recupera ${c} de vida` : ''}.`,
+      critico: '¡Golpe crítico!', eficaz: r => `¡Es muy eficaz! (${r})`, poco: 'No es muy eficaz…',
+      gana: n => `🏆 ¡${n} gana el combate!`, revancha: 'Revancha', editar: 'Cambiar las bestias'
+    },
+
     /* ---------- juego de mezclas ---------- */
     juego: {
       titulo: '¿Luz o pigmento?', modos: ['Luz · aditiva', 'Pigmento · sustractiva'],
@@ -519,8 +553,152 @@
     pintar();
   }
 
+  /* ---------- Arena del bestiario: combate por turnos entre dos bestias ----------
+     Nada se guarda ni se envía: los personajes viven solo mientras la página está abierta. */
+  const ELEM = {
+    fuego: ['#e3241b', '#f39200', '#ffd400', '#1f5fbf'], agua: ['#0b5ed7', '#00a3e0', '#45d6c8', '#f39200'],
+    planta: ['#1e9e4a', '#2e7d32', '#c6d82f', '#e6007e'], tierra: ['#b8863b', '#8b5a2b', '#d9b37a', '#5b3fa0'],
+    aire: ['#eef6fb', '#a9dcf5', '#c9ced3', '#ffb300'], sombra: ['#5b2a86', '#1b1b1b', '#7a7a7a', '#ffe500']
+  };
+  /* quién vence a quién: dos ciclos de tres */
+  const GANA = { fuego: 'planta', planta: 'agua', agua: 'fuego', aire: 'tierra', tierra: 'sombra', sombra: 'aire' };
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const PTS = 15;
+
+  function bestiaSVG(b, lado) {
+    const [c1, c2, c3, ac] = ELEM[b.elem], f = b.forma, flip = lado === 1 ? 'scale(-1 1)' : '';
+    const cuerpo = f === 'circulo' ? `<ellipse cx="0" cy="10" rx="46" ry="40" fill="${c1}" stroke="#111" stroke-width="3"/><ellipse cx="6" cy="22" rx="24" ry="18" fill="${c2}"/>`
+      : f === 'cuadrado' ? `<rect x="-44" y="-28" width="88" height="78" rx="10" fill="${c1}" stroke="#111" stroke-width="3"/><rect x="-14" y="6" width="40" height="34" rx="6" fill="${c2}"/>`
+      : `<path d="M-50 48 L0 -46 L50 48 Z" fill="${c1}" stroke="#111" stroke-width="3" stroke-linejoin="round"/><path d="M-16 44 L4 8 L22 44 Z" fill="${c2}"/>`;
+    const extra = f === 'triangulo' ? `<path d="M-30 -4 l-16 -26 l24 12z M10 -30 l8 -30 l10 30z" fill="${c3}" stroke="#111" stroke-width="2"/>`
+      : f === 'cuadrado' ? `<path d="M-44 -10 h-12 v20 h12 M44 -10 h12 v20 h-12" fill="${c3}" stroke="#111" stroke-width="2"/>`
+      : `<circle cx="-30" cy="-26" r="12" fill="${c3}" stroke="#111" stroke-width="2"/><circle cx="26" cy="-28" r="12" fill="${c3}" stroke="#111" stroke-width="2"/>`;
+    const manchas = `<circle cx="-24" cy="20" r="5" fill="${c3}"/><circle cx="-30" cy="34" r="3.5" fill="${c3}"/>`;
+    const ojos = `<circle cx="10" cy="-6" r="9" fill="#fff" stroke="#111" stroke-width="2"/><circle cx="13" cy="-6" r="5" fill="${ac}"/><circle cx="14" cy="-8" r="1.6" fill="#fff"/>`;
+    return `<g transform="${flip}">${extra}${cuerpo}${manchas}${ojos}<path d="M20 14 q8 6 16 0" stroke="#111" stroke-width="2.5" fill="none"/><path d="M-30 52 v10 M-10 52 v10 M14 52 v10 M32 52 v10" stroke="#111" stroke-width="5" stroke-linecap="round"/></g>`;
+  }
+
+  function montarArena(box) {
+    const A = T('arena');
+    const nuevo = (i) => ({ nombre: A.ejemplo[i][0], elem: A.ejemplo[i][1], forma: A.ejemplo[i][2], poder: A.ejemplo[i][3], atq: 6, def: 5, vel: 4 });
+    let P = [nuevo(0), nuevo(1)], cpu = false, B = null;
+
+    /* ----- pantalla de creación ----- */
+    function crear() {
+      const ficha = (b, i) => {
+        const usados = b.atq + b.def + b.vel;
+        return `<fieldset class="ar-ficha" data-j="${i}"><legend>${A.jugador} ${i + 1}${i === 1 && cpu ? ' · ' + A.maquina : ''}</legend>
+          <svg viewBox="-70 -70 140 140" class="ar-mini" aria-hidden="true">${bestiaSVG(b, 0)}</svg>
+          <label>${A.campos.nombre}<input data-k="nombre" maxlength="18" value="${esc(b.nombre)}"></label>
+          <label>${A.campos.elem}<select data-k="elem">${Object.keys(ELEM).map(e => `<option value="${e}" ${e === b.elem ? 'selected' : ''}>${A.elementos[e]}</option>`).join('')}</select></label>
+          <label>${A.campos.forma}<select data-k="forma">${['circulo', 'cuadrado', 'triangulo'].map(f => `<option value="${f}" ${f === b.forma ? 'selected' : ''}>${A.formas[f]}</option>`).join('')}</select></label>
+          <label>${A.campos.poder}<input data-k="poder" maxlength="20" value="${esc(b.poder)}"></label>
+          <p class="ar-pts ${usados > PTS ? 'ko' : ''}">${A.puntos(PTS - usados)}</p>
+          ${['atq', 'def', 'vel'].map(s => `<label class="ar-st">${A.stats[s]} <b>${b[s]}</b><input type="range" min="1" max="9" data-k="${s}" value="${b[s]}"></label>`).join('')}
+          <p class="ar-bonus">${A.bonus[b.forma]}</p></fieldset>`;
+      };
+      box.innerHTML = `<div class="mix-head"><b>${A.titulo}</b>
+          <div class="mix-tabs" role="group">${[0, 1].map(m => `<button type="button" data-cpu="${m}" class="${(m === 1) === cpu ? 'on' : ''}">${A.modos[m]}</button>`).join('')}</div></div>
+        <p class="fw-p">${A.intro}</p>
+        <div class="ar-fichas">${ficha(P[0], 0)}${ficha(P[1], 1)}</div>
+        <details class="ar-tabla"><summary>${A.ventajasT}</summary><ul>${Object.entries(GANA).map(([a, b]) => `<li><b>${A.elementos[a]}</b> → ${A.elementos[b]}: ${A.razon[a]}</li>`).join('')}</ul></details>
+        <p class="ar-err" aria-live="polite"></p>
+        <button type="button" class="mix-go ar-go">${A.luchar}</button>`;
+      box.querySelectorAll('[data-cpu]').forEach(b => b.onclick = () => { cpu = b.dataset.cpu === '1'; sfx('laser'); crear(); });
+      box.querySelectorAll('.ar-ficha').forEach(fs => {
+        const j = +fs.dataset.j;
+        fs.querySelectorAll('[data-k]').forEach(inp => {
+          const k = inp.dataset.k;
+          inp.addEventListener(inp.tagName === 'INPUT' && inp.type === 'text' || !inp.type || inp.type === 'text' ? 'input' : 'change', () => {
+            P[j][k] = ['atq', 'def', 'vel'].includes(k) ? +inp.value : inp.value;
+            if (k !== 'nombre' && k !== 'poder') { sfx('burbuja'); crear(); box.querySelector(`.ar-ficha[data-j="${j}"] [data-k="${k}"]`).focus(); }
+          });
+          if (inp.type === 'range') inp.oninput = () => { P[j][k] = +inp.value; inp.previousElementSibling.textContent = inp.value; const u = P[j].atq + P[j].def + P[j].vel; const p = fs.querySelector('.ar-pts'); p.textContent = A.puntos(PTS - u); p.classList.toggle('ko', u > PTS); };
+        });
+      });
+      box.querySelector('.ar-go').onclick = () => {
+        const mal = P.findIndex(b => b.atq + b.def + b.vel > PTS || !b.nombre.trim() || !b.poder.trim());
+        if (mal >= 0) { sfx('metal'); box.querySelector('.ar-err').textContent = A.errorFicha(mal + 1, PTS); return; }
+        empezar();
+      };
+    }
+
+    /* ----- combate ----- */
+    function empezar() {
+      B = P.map(p => {
+        const atq = p.atq + (p.forma === 'triangulo' ? 2 : 0), def = p.def + (p.forma === 'cuadrado' ? 2 : 0);
+        const max = 40 + p.def * 2 + (p.forma === 'circulo' ? 10 : 0);
+        return { ...p, atq, def, max, hp: max, guardia: false, esp: true };
+      });
+      B.turno = B[0].vel === B[1].vel ? (Math.random() < .5 ? 0 : 1) : (B[0].vel > B[1].vel ? 0 : 1);
+      B.log = [A.empieza(esc(B[B.turno].nombre))]; B.fin = false;
+      sfx('laser'); pintarCombate();
+      if (cpu && B.turno === 1) setTimeout(turnoCPU, 900);
+    }
+    const mult = (a, d) => GANA[a.elem] === d.elem ? 2 : GANA[d.elem] === a.elem ? .5 : 1;
+    function golpe(i, tipo) {
+      if (B.fin) return;
+      const a = B[i], d = B[1 - i], msg = [];
+      if (tipo === 'def') {
+        a.guardia = true; const cura = Math.min(4, a.max - a.hp); a.hp += cura;
+        msg.push(A.defiende(esc(a.nombre), cura)); sfx('burbuja');
+      } else {
+        const esp = tipo === 'esp';
+        if (esp) a.esp = false;
+        if (esp && Math.random() < .2) { msg.push(A.falla(esc(a.nombre))); sfx('metal'); }
+        else {
+          const m = esp ? mult(a, d) : 1, crit = Math.random() < .1;
+          let dmg = ((esp ? 7 : 4) + a.atq * (esp ? 2 : 1.6) - d.def * .7) * m * (0.85 + Math.random() * .3) * (crit ? 1.5 : 1);
+          dmg = Math.max(1, Math.round(d.guardia ? dmg * .4 : dmg));
+          d.hp = Math.max(0, d.hp - dmg); d.guardia = false;
+          msg.push(A.usa(esc(a.nombre), esp ? A.ataqueDe(A.elementos[a.elem]) : esc(a.poder), dmg));
+          if (crit) msg.push(A.critico);
+          if (m === 2) msg.push(A.eficaz(A.razon[a.elem]));
+          if (m === .5) msg.push(A.poco);
+          box.dataset.hit = 1 - i; sfx(m === 2 || crit ? 'coin' : 'laser');
+        }
+      }
+      if (tipo !== 'def') a.guardia = false;
+      B.log.unshift(msg.join(' '));
+      if (d.hp <= 0) { B.fin = true; B.log.unshift(A.gana(esc(a.nombre))); sfx('coin'); }
+      else B.turno = 1 - i;
+      pintarCombate();
+      if (!B.fin && cpu && B.turno === 1) setTimeout(turnoCPU, 1100);
+    }
+    function turnoCPU() {
+      const a = B[1], d = B[0];
+      let t = 'atq';
+      if (a.esp && mult(a, d) >= 1 && Math.random() < .6) t = 'esp';
+      else if (a.hp < a.max * .3 && Math.random() < .4) t = 'def';
+      golpe(1, t);
+    }
+    function pintarCombate() {
+      const barra = b => { const p = b.hp / b.max; return `<div class="ar-hp"><i style="width:${p * 100}%;background:${p > .5 ? '#2fd36b' : p > .2 ? '#ffc400' : '#ff3b3b'}"></i></div><span class="ar-hpn">${b.hp} / ${b.max}</span>`; };
+      const hit = box.dataset.hit; delete box.dataset.hit;
+      const humano = !B.fin && !(cpu && B.turno === 1);
+      const yo = B[B.turno];
+      box.innerHTML = `<div class="mix-head"><b>${A.titulo}</b></div>
+        <div class="ar-campo">
+          ${[0, 1].map(i => `<div class="ar-lado ar-l${i}${B.turno === i && !B.fin ? ' ar-activo' : ''}">
+            <div class="ar-info"><b>${esc(B[i].nombre)}</b> <span class="ar-el" style="--ec:${ELEM[B[i].elem][0]}">${A.elementos[B[i].elem]}</span>${B[i].guardia ? ` <span class="ar-g">🛡</span>` : ''}${barra(B[i])}</div>
+            <svg viewBox="-70 -70 140 140" class="ar-bestia${hit == i ? ' ar-hit' : ''}${B[i].hp <= 0 ? ' ar-ko' : ''}" role="img" aria-label="${esc(B[i].nombre)}">${bestiaSVG(B[i], i)}</svg></div>`).join('')}
+        </div>
+        ${B.fin ? `<div class="ar-acc"><button type="button" class="mix-go" data-re="1">${A.revancha}</button><button type="button" class="mix-go" data-ed="1">${A.editar}</button></div>`
+          : `<p class="ar-turno">${humano ? A.turnoDe(esc(yo.nombre)) : A.piensa(esc(yo.nombre))}</p>
+        <div class="ar-acc">${humano ? `<button type="button" data-m="atq">⚔ ${esc(yo.poder)}</button>
+          <button type="button" data-m="esp" ${yo.esp ? '' : 'disabled'}>✦ ${A.ataqueDe(A.elementos[yo.elem])}${yo.esp ? '' : ' · ' + A.usado}</button>
+          <button type="button" data-m="def">🛡 ${A.defender}</button>` : ''}</div>`}
+        <ol class="ar-log" aria-live="polite">${B.log.slice(0, 6).map(l => `<li>${l}</li>`).join('')}</ol>`;
+      box.querySelectorAll('[data-m]').forEach(b => b.onclick = () => golpe(B.turno, b.dataset.m));
+      const re = box.querySelector('[data-re]'); if (re) re.onclick = empezar;
+      const ed = box.querySelector('[data-ed]'); if (ed) ed.onclick = crear;
+    }
+    crear();
+  }
+
   function init(root) {
     root.querySelectorAll('[data-mix]').forEach(montarJuego);
+    root.querySelectorAll('[data-arena]').forEach(montarArena);
     root.querySelectorAll('[data-fw="fb"]').forEach(montarFb);
     root.querySelectorAll('[data-fw="escala"]').forEach(montarEscala);
     root.querySelectorAll('[data-fw="diana"]').forEach(montarDiana);
@@ -558,6 +736,34 @@
 .mix-q{font-size:18px;margin:12px 0 4px}
 .mix-go{border-color:var(--c);color:var(--c);margin-top:4px}
 .mix-pt{min-height:1.4em}.mix-pt .ok{color:var(--fluor)}.mix-pt .ko{color:#ff7a7a}
+.ar-fichas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0}
+@media (max-width:640px){.ar-fichas{grid-template-columns:1fr}}
+.ar-ficha{border:1px solid #3a3742;padding:10px 12px;margin:0;min-width:0}
+.ar-ficha legend{font-family:var(--pixel);font-size:11px;color:var(--c);padding:0 6px}
+.ar-ficha label{display:block;font-size:13px;margin:6px 0}
+.ar-ficha input:not([type=range]),.ar-ficha select{display:block;width:100%;margin-top:3px;font:inherit;font-size:14px;padding:5px 8px;background:#1f1c25;color:#f3efe6;border:1px solid #5c5866}
+.ar-ficha input[type=range]{width:100%;accent-color:var(--c)}
+.ar-mini{width:110px;height:110px;display:block;margin:0 auto}
+.ar-pts{font-size:13px;color:var(--fluor);margin:8px 0 0}.ar-pts.ko{color:#ff7a7a}
+.ar-bonus{font-size:12px;opacity:.8;margin:4px 0 0}
+.ar-tabla{font-size:13px;margin:6px 0}.ar-tabla summary{cursor:pointer;color:var(--c)}.ar-tabla ul{margin:6px 0;padding-inline-start:18px}
+.ar-err{color:#ff7a7a;font-size:14px;min-height:1.2em}
+.ar-campo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;background:linear-gradient(#1c1a22,#26222e);padding:10px;border:1px solid #3a3742}
+.ar-lado{display:flex;flex-direction:column;gap:6px}.ar-l1{text-align:end}
+.ar-activo .ar-info b{color:var(--c)}
+.ar-info{font-size:14px}.ar-el{display:inline-block;font-size:11px;padding:1px 6px;border:1px solid var(--ec);color:var(--ec)}
+.ar-hp{height:10px;border:1px solid #5c5866;margin-top:4px;background:#111}.ar-hp i{display:block;height:100%;transition:width .4s}
+.ar-l1 .ar-hp i{margin-inline-start:auto}
+.ar-hpn{font-size:11px;opacity:.75}
+.ar-bestia{width:100%;max-width:170px;height:auto;align-self:center}
+.ar-hit{animation:arHit .45s}.ar-ko{opacity:.35;transform:rotate(12deg);transition:all .4s}
+@keyframes arHit{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px);filter:brightness(2)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
+@media (prefers-reduced-motion:reduce){.ar-hit{animation:none}.ar-hp i{transition:none}}
+.ar-turno{font-size:16px;margin:6px 0}
+.ar-acc{display:flex;gap:8px;flex-wrap:wrap}
+.ar-acc button{font:inherit;font-size:15px;padding:8px 14px;border:2px solid var(--c);background:#1f1c25;color:#f3efe6;cursor:pointer}
+.ar-acc button:disabled{opacity:.4;cursor:not-allowed}
+.ar-log{font-size:13px;margin:10px 0 0;padding-inline-start:18px;opacity:.9}.ar-log li:first-child{font-weight:700;opacity:1}
 .fw h4{font-family:var(--marker);font-size:20px;color:var(--c);margin:0 0 6px}
 .fw-aviso{font-size:13px;opacity:.8;border-left:3px solid var(--fluor);padding-left:8px}
 [dir=rtl] .fw-aviso{border-left:0;border-right:3px solid var(--fluor);padding:0 8px 0 0}
@@ -593,14 +799,14 @@
       [['reproducir', 'transformar'], [0]],
       [['forma', 'textura'], [0]],
       [['colorQue', 'mezclas', 'circulo', 'gamas', 'colorear'], [1]],
-      [['composicion', 'tecnicas', 'presentar'], [2]]
+      [['composicion', 'tecnicas', 'presentar', 'arena'], [2]]
     ],
     SABER: {
       carta: ['EPV.1.B.1', 'EPV.1.B.5'], jerarquia: ['EPV.1.B.1', 'EPV.1.B.5'], pagina: ['EPV.1.B.5'],
       reproducir: ['EPV.1.C.1'], transformar: ['EPV.1.C.1'],
       forma: ['EPV.1.B.3'], textura: ['EPV.1.B.3'],
       colorQue: ['EPV.1.B.3'], mezclas: ['EPV.1.B.3'], circulo: ['EPV.1.B.3'], gamas: ['EPV.1.B.3'], colorear: ['EPV.1.B.3', 'EPV.1.C.2'],
-      composicion: ['EPV.1.B.5'], tecnicas: ['EPV.1.C.2'], presentar: ['EPV.1.B.1']
+      composicion: ['EPV.1.B.5'], tecnicas: ['EPV.1.C.2'], presentar: ['EPV.1.B.1'], arena: ['EPV.1.B.3', 'EPV.1.C.1']
     },
     VIDEOS: {
       transformar: [
@@ -641,7 +847,7 @@
       ]
     },
     ACT_IL: [['IL 3.1', 'IL 3.2', 'IL 3.3', 'IL 3.4'], ['IL 3.5', 'IL 3.6'], ['IL 3.7', 'IL 3.8', 'IL 3.9', 'IL 3.10', 'IL 3.11']],
-    figs: { carta: figCarta, pagina: figPagina, formas: figFormas, juego: figJuego },
+    figs: { carta: figCarta, pagina: figPagina, formas: figFormas, juego: figJuego, arena: figArena },
     init
   });
 })();
