@@ -635,7 +635,7 @@
       sfx('laser'); pintarCombate();
       if (cpu && B.turno === 1) setTimeout(turnoCPU, 900);
     }
-    const mult = (a, d) => GANA[a.elem] === d.elem ? 2 : GANA[d.elem] === a.elem ? .5 : 1;
+    const mult = (a, d) => GANA[a.elem] === d.elem ? 1.5 : GANA[d.elem] === a.elem ? .5 : 1;
     function golpe(i, tipo) {
       if (B.fin) return;
       const a = B[i], d = B[1 - i], msg = [];
@@ -648,14 +648,14 @@
         if (esp && Math.random() < .2) { msg.push(A.falla(esc(a.nombre))); sfx('metal'); }
         else {
           const m = esp ? mult(a, d) : 1, crit = Math.random() < .1;
-          let dmg = ((esp ? 7 : 4) + a.atq * (esp ? 2 : 1.6) - d.def * .7) * m * (0.85 + Math.random() * .3) * (crit ? 1.5 : 1);
+          let dmg = ((esp ? 6 : 4) + a.atq * (esp ? 1.8 : 1.6) - d.def * .7) * m * (0.85 + Math.random() * .3) * (crit ? 1.5 : 1);
           dmg = Math.max(1, Math.round(d.guardia ? dmg * .4 : dmg));
           d.hp = Math.max(0, d.hp - dmg); d.guardia = false;
           msg.push(A.usa(esc(a.nombre), esp ? A.ataqueDe(A.elementos[a.elem]) : esc(a.poder), dmg));
           if (crit) msg.push(A.critico);
-          if (m === 2) msg.push(A.eficaz(A.razon[a.elem]));
+          if (m > 1) msg.push(A.eficaz(A.razon[a.elem]));
           if (m === .5) msg.push(A.poco);
-          box.dataset.hit = 1 - i; sfx(m === 2 || crit ? 'coin' : 'laser');
+          box.dataset.hit = 1 - i; sfx(m > 1 || crit ? 'coin' : 'laser');
         }
       }
       if (tipo !== 'def') a.guardia = false;
@@ -714,6 +714,8 @@
 .fig-b1 .b1-l path{stroke:#8a8592;stroke-width:1.5;fill:none}
 .fig-b1 .b1-zl{font-family:var(--marker);font-size:20px;fill:#f3efe6}
 .fig-b1 .b1-ps{font-size:11px;fill:#5c5866}
+.fig-b1,.dn-svg,.mix-svg,.ar-mini,.ar-bestia{direction:ltr}
+[dir=rtl] .ar-campo{direction:ltr}
 .duo-b1{display:grid;grid-template-columns:minmax(200px,300px) 1fr;gap:22px;align-items:start}
 .duo-b1 ul{padding-left:18px;margin:.3em 0 .8em}
 @media (max-width:640px){.duo-b1{grid-template-columns:1fr}}
