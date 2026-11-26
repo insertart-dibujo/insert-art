@@ -134,6 +134,12 @@
         ${h.fig('juego')}`],
       circulo: ['Colour wheel and complementary colours', h => `
         <p class="def">The <b>colour wheel</b> arranges colours in a circle: primaries, secondaries between them and tertiaries in between.</p>
+        <ul class="cual cual3">
+          <li><b>Primaries ●●●</b><span>Yellow, red and blue. They don’t come from any mix.</span></li>
+          <li><b>Secondaries ●●</b><span>Orange, violet and green. Made by mixing two primaries.</span></li>
+          <li><b>Tertiaries ●</b><span>Made by mixing a primary with the secondary next to it.</span></li>
+        </ul>
+        ${h.fig('rueda')}
         <p><b>Complementary</b> colours are <b>opposite</b> each other on the wheel. Together they create maximum contrast: each makes the other “vibrate”.</p>
         <ul class="cual cual3">
           <li><b>Red ↔ green</b><span>In the CMY model: cyan ↔ red.</span></li>
@@ -369,6 +375,27 @@
       defiende: (n, c) => `${n} defends${c ? ` and recovers ${c} life` : ''}.`,
       critico: 'Critical hit!', eficaz: r => `It’s super effective! (${r})`, poco: 'It’s not very effective…',
       gana: n => `🏆 ${n} wins the battle!`, revancha: 'Rematch', editar: 'Change the beasts'
+    },
+    rueda: {
+      titulo: 'The colour wheel', modos: ['Explore', 'Challenge'],
+      filtros: { todos: 'All', prim: 'Primaries', sec: 'Secondaries', ter: 'Tertiaries' },
+      tipos: { prim: 'Primary', sec: 'Secondary', ter: 'Tertiary' },
+      colores: ['yellow', 'yellow-orange', 'orange', 'red-orange', 'red', 'red-violet', 'violet', 'blue-violet', 'blue', 'blue-green', 'green', 'yellow-green'],
+      toca: 'Tap a colour on the wheel to see what type of colour it is, how it is made and what its complementary is.',
+      def: {
+        prim: '<b>Primaries</b> cannot be made by mixing other colours. Mixing them together gives you all the others.',
+        sec: '<b>Secondaries</b> are made by mixing two primaries in equal parts.',
+        ter: '<b>Tertiaries</b> are made by mixing a primary with the secondary next to it.'
+      },
+      noMezcla: 'It doesn’t come from any mix: it is a primary.',
+      mezcla: (a, b) => `Made by mixing <b>${a}</b> + <b>${b}</b>.`,
+      comp: c => `Its <b>complementary</b> (the opposite on the wheel) is <b>${c}</b>.`,
+      vibra: 'Together they vibrate: maximum contrast. This is how it would look on your card, with the complementary as the focal point:',
+      compQ: c => `Tap the complementary of <b>${c}</b>.`,
+      mezQ: (a, b) => `Tap the colour you get by mixing <b>${a}</b> + <b>${b}</b>.`,
+      tipoQ: t => `Tap a <b>${t}</b> colour.`,
+      bien: 'Correct!', mal: 'Not that one. Look at the wheel and try again (only first-try answers count).',
+      puntos: (p, n) => `Correct: ${p} of ${n}`, fin: (p, n) => `Challenge over: ${p} of ${n}.`, otra: 'Play again'
     },
     juego: {
       titulo: 'Light or pigment?', modos: ['Light · additive', 'Pigment · subtractive'],

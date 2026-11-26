@@ -134,6 +134,12 @@
         ${h.fig('juego')}`],
       circulo: ['Cercle chromatique et complémentaires', h => `
         <p class="def">Le <b>cercle chromatique</b> range les couleurs sur une roue : primaires, secondaires entre elles et tertiaires intermédiaires.</p>
+        <ul class="cual cual3">
+          <li><b>Primaires ●●●</b><span>Jaune, rouge et bleu. Ils ne viennent d’aucun mélange.</span></li>
+          <li><b>Secondaires ●●</b><span>Orange, violet et vert. On les obtient en mélangeant deux primaires.</span></li>
+          <li><b>Tertiaires ●</b><span>On les obtient en mélangeant un primaire avec le secondaire voisin.</span></li>
+        </ul>
+        ${h.fig('rueda')}
         <p>Les <b>complémentaires</b> sont les couleurs <b>opposées</b> sur le cercle. Ensemble, elles produisent le contraste maximal : chacune fait « vibrer » l’autre.</p>
         <ul class="cual cual3">
           <li><b>Rouge ↔ vert</b><span>Dans le modèle CMJ : cyan ↔ rouge.</span></li>
@@ -369,6 +375,27 @@
       defiende: (n, c) => `${n} se protège${c ? ` et récupère ${c} de vie` : ''}.`,
       critico: 'Coup critique !', eficaz: r => `C’est super efficace ! (${r})`, poco: 'Ce n’est pas très efficace…',
       gana: n => `🏆 ${n} gagne le combat !`, revancha: 'Revanche', editar: 'Changer les bêtes'
+    },
+    rueda: {
+      titulo: 'Le cercle chromatique', modos: ['Explorer', 'Défi'],
+      filtros: { todos: 'Tous', prim: 'Primaires', sec: 'Secondaires', ter: 'Tertiaires' },
+      tipos: { prim: 'Primaire', sec: 'Secondaire', ter: 'Tertiaire' },
+      colores: ['jaune', 'jaune orangé', 'orange', 'rouge orangé', 'rouge', 'rouge violacé', 'violet', 'bleu violacé', 'bleu', 'bleu-vert', 'vert', 'jaune-vert'],
+      toca: 'Touche une couleur du cercle pour voir quel type de couleur c’est, comment on l’obtient et quelle est sa complémentaire.',
+      def: {
+        prim: 'Les <b>primaires</b> ne s’obtiennent pas en mélangeant d’autres couleurs. En les mélangeant entre elles, on obtient toutes les autres.',
+        sec: 'Les <b>secondaires</b> s’obtiennent en mélangeant deux primaires à parts égales.',
+        ter: 'Les <b>tertiaires</b> s’obtiennent en mélangeant un primaire avec le secondaire voisin.'
+      },
+      noMezcla: 'Elle ne vient d’aucun mélange : c’est une primaire.',
+      mezcla: (a, b) => `On l’obtient en mélangeant <b>${a}</b> + <b>${b}</b>.`,
+      comp: c => `Sa <b>complémentaire</b> (l’opposée sur le cercle) est <b>${c}</b>.`,
+      vibra: 'Ensemble, elles vibrent : c’est le contraste maximal. Voici le rendu sur ta carte, avec la complémentaire comme point d’attention :',
+      compQ: c => `Touche la complémentaire de <b>${c}</b>.`,
+      mezQ: (a, b) => `Touche la couleur obtenue en mélangeant <b>${a}</b> + <b>${b}</b>.`,
+      tipoQ: t => `Touche une couleur <b>${t}</b>.`,
+      bien: 'Correct !', mal: 'Ce n’est pas celle-là. Regarde le cercle et réessaie (seules les bonnes réponses du premier coup comptent).',
+      puntos: (p, n) => `Bonnes réponses : ${p} sur ${n}`, fin: (p, n) => `Fin du défi : ${p} sur ${n}.`, otra: 'Rejouer'
     },
     juego: {
       titulo: 'Lumière ou pigment ?', modos: ['Lumière · additive', 'Pigment · soustractive'],

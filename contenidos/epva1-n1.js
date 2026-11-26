@@ -60,6 +60,7 @@
 
   /* Huecos que rellena init() */
   const figJuego = () => `<div class="mix-game" data-mix></div>`;
+  const figRueda = () => `<div class="mix-game rd-game" data-rueda></div>`;
   const figArena = () => `<div class="mix-game ar-game" data-arena></div>`;
 
   const ES = {
@@ -194,6 +195,12 @@
 
       circulo: ['Círculo cromático y complementarios', h => `
         <p class="def">El <b>círculo cromático</b> ordena los colores en una rueda: primarios, secundarios entre ellos y terciarios intermedios.</p>
+        <ul class="cual cual3">
+          <li><b>Primarios ●●●</b><span>Amarillo, rojo y azul. No salen de ninguna mezcla.</span></li>
+          <li><b>Secundarios ●●</b><span>Naranja, violeta y verde. Salen de mezclar dos primarios.</span></li>
+          <li><b>Terciarios ●</b><span>Salen de mezclar un primario con el secundario que tiene al lado.</span></li>
+        </ul>
+        ${h.fig('rueda')}
         <p><b>Complementarios</b> son los colores <b>opuestos</b> en el círculo. Juntos producen el máximo contraste: cada uno hace «vibrar» al otro.</p>
         <ul class="cual cual3">
           <li><b>Rojo ↔ verde</b><span>En el modelo CMY: cian ↔ rojo.</span></li>
@@ -443,6 +450,30 @@
       gana: n => `🏆 ¡${n} gana el combate!`, revancha: 'Revancha', editar: 'Cambiar las bestias'
     },
 
+
+    /* ---------- círculo cromático interactivo ---------- */
+    rueda: {
+      titulo: 'El círculo cromático', modos: ['Explora', 'Reto'],
+      filtros: { todos: 'Todos', prim: 'Primarios', sec: 'Secundarios', ter: 'Terciarios' },
+      tipos: { prim: 'Primario', sec: 'Secundario', ter: 'Terciario' },
+      colores: ['amarillo', 'amarillo anaranjado', 'naranja', 'rojo anaranjado', 'rojo', 'rojo violáceo', 'violeta', 'azul violáceo', 'azul', 'azul verdoso', 'verde', 'amarillo verdoso'],
+      toca: 'Toca un color del círculo para ver qué tipo de color es, cómo se consigue y cuál es su complementario.',
+      def: {
+        prim: 'Los <b>primarios</b> no se pueden conseguir mezclando otros colores. Mezclándolos entre sí salen todos los demás.',
+        sec: 'Los <b>secundarios</b> salen de mezclar dos primarios a partes iguales.',
+        ter: 'Los <b>terciarios</b> salen de mezclar un primario con el secundario que tiene al lado.'
+      },
+      noMezcla: 'No sale de ninguna mezcla: es un primario.',
+      mezcla: (a, b) => `Sale de mezclar <b>${a}</b> + <b>${b}</b>.`,
+      comp: c => `Su <b>complementario</b> (el opuesto en el círculo) es <b>${c}</b>.`,
+      vibra: 'Juntos vibran: es el máximo contraste. Así quedaría en tu carta, con el complementario como punto de atención:',
+      compQ: c => `Toca el complementario de <b>${c}</b>.`,
+      mezQ: (a, b) => `Toca el color que sale de mezclar <b>${a}</b> + <b>${b}</b>.`,
+      tipoQ: t => `Toca un color <b>${t}</b>.`,
+      bien: '¡Correcto!', mal: 'No es ese. Fíjate en el círculo y vuelve a probar (solo cuentan los aciertos a la primera).',
+      puntos: (p, n) => `Aciertos: ${p} de ${n}`, fin: (p, n) => `Fin del reto: ${p} de ${n}.`, otra: 'Jugar otra vez'
+    },
+
     /* ---------- juego de mezclas ---------- */
     juego: {
       titulo: '¿Luz o pigmento?', modos: ['Luz · aditiva', 'Pigmento · sustractiva'],
@@ -502,6 +533,83 @@
     }
     const limpiar = () => { on = { R: false, G: false, B: false, C: false, M: false, Y: false }; };
     function empezar() { retos = RETOS.slice().sort(() => Math.random() - .5).slice(0, 8); ronda = 0; aciertos = 0; modo = retos[0][0]; limpiar(); pintar(); }
+    pintar();
+  }
+
+
+  /* ---------- círculo cromático ---------- */
+  const RD_HEX = ['#ffd400', '#ffa800', '#ff7a00', '#f04a12', '#d9161e', '#a3195b', '#6b2c91', '#3a3d9e', '#0057b8', '#00888a', '#1f9e3a', '#9ccc1c'];
+  const RD_TIPO = i => i % 4 === 0 ? 'prim' : i % 2 === 0 ? 'sec' : 'ter';
+  const RD_MEZ = i => RD_TIPO(i) === 'prim' ? null : RD_TIPO(i) === 'sec' ? [(i + 10) % 12, (i + 2) % 12] : [(i + 11) % 12, (i + 1) % 12];
+  function montarRueda(box) {
+    const R = T('rueda'), N = i => R.colores[i];
+    let sel = null, filtro = 'todos', enReto = false, retos = [], ronda = 0, aciertos = 0, fallo = false;
+    const pt = (r, a) => [150 + r * Math.cos(a * Math.PI / 180), 150 + r * Math.sin(a * Math.PI / 180)];
+    function sector(i) {
+      const c = -90 + i * 30, [x1, y1] = pt(140, c - 15), [x2, y2] = pt(140, c + 15), [x3, y3] = pt(72, c + 15), [x4, y4] = pt(72, c - 15);
+      const apag = !enReto && filtro !== 'todos' && RD_TIPO(i) !== filtro;
+      const mark = sel !== null && !enReto && (i === sel || i === (sel + 6) % 12);
+      const [dx, dy] = pt(122, c), d = RD_TIPO(i) === 'prim' ? 3 : RD_TIPO(i) === 'sec' ? 2 : 1;
+      const dots = Array.from({ length: d }, (_, k) => { const [px, py] = pt(122, c + (k - (d - 1) / 2) * 6); return `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="2.4" fill="#fff" stroke="#000" stroke-width=".8"/>`; }).join('');
+      return `<g class="rd-s${apag ? ' off' : ''}" data-i="${i}" tabindex="0" role="button" aria-label="${N(i)}">
+        <path d="M${x1.toFixed(1)} ${y1.toFixed(1)} A140 140 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)} L${x3.toFixed(1)} ${y3.toFixed(1)} A72 72 0 0 0 ${x4.toFixed(1)} ${y4.toFixed(1)}Z" fill="${RD_HEX[i]}" stroke="${mark ? '#fff' : '#141218'}" stroke-width="${mark ? 4 : 2}"/>${dots}</g>`;
+    }
+    function svg() {
+      let mid = `<circle cx="150" cy="150" r="66" fill="#1f1c25"/>`;
+      if (sel !== null && !enReto) {
+        const c = -90 + sel * 30, [a1, b1] = pt(100, c), [a2, b2] = pt(100, c + 180);
+        mid = `<line x1="${a1.toFixed(1)}" y1="${b1.toFixed(1)}" x2="${a2.toFixed(1)}" y2="${b2.toFixed(1)}" stroke="#fff" stroke-width="2" stroke-dasharray="5 4"/>
+          <circle cx="150" cy="150" r="62" fill="${RD_HEX[sel]}" stroke="#141218" stroke-width="3"/><circle cx="150" cy="150" r="26" fill="${RD_HEX[(sel + 6) % 12]}"/>`;
+      }
+      const ord = Array.from({ length: 12 }, (_, i) => i).sort((x, y) => (sel !== null && (x === sel || x === (sel + 6) % 12)) - (sel !== null && (y === sel || y === (sel + 6) % 12)));
+      return `<svg viewBox="0 0 300 300" class="rd-svg">${ord.map(sector).join('')}${mid}</svg>`;
+    }
+    function carta(i) {
+      const a = RD_HEX[i], b = RD_HEX[(i + 6) % 12];
+      return `<svg viewBox="0 0 120 150" class="rd-carta" aria-hidden="true"><rect x="3" y="3" width="114" height="144" rx="10" fill="${a}" stroke="#141218" stroke-width="3"/>
+        <rect x="12" y="12" width="96" height="16" rx="4" fill="#141218" opacity=".35"/><rect x="12" y="34" width="96" height="70" rx="6" fill="#141218" opacity=".25"/>
+        <path d="M30 98 Q34 60 60 56 Q86 60 90 98Z" fill="#141218" opacity=".55"/><circle cx="50" cy="74" r="7" fill="${b}"/><circle cx="70" cy="74" r="7" fill="${b}"/>
+        <path d="M60 40 l6 10 h-12z" fill="${b}"/><rect x="12" y="112" width="96" height="6" rx="3" fill="#141218" opacity=".3"/><rect x="12" y="124" width="70" height="6" rx="3" fill="#141218" opacity=".3"/></svg>`;
+    }
+    function info() {
+      if (sel === null) return `<p class="mix-p">${R.toca}</p>`;
+      const t = RD_TIPO(sel), m = RD_MEZ(sel), c = (sel + 6) % 12;
+      return `<p class="rd-nom"><span class="mix-sw" style="background:${RD_HEX[sel]}"></span><b>${N(sel)}</b> · ${R.tipos[t]}</p>
+        <p class="mix-p">${R.def[t]}</p><p>${m ? R.mezcla(N(m[0]), N(m[1])) : R.noMezcla}</p>
+        <p>${R.comp(N(c))}</p><div class="rd-vib">${carta(sel)}<p class="mix-p">${R.vibra}</p></div>`;
+    }
+    function pregunta() {
+      const r = retos[ronda];
+      return r[0] === 'comp' ? R.compQ(N(r[1])) : r[0] === 'mez' ? R.mezQ(N(RD_MEZ(r[1])[0]), N(RD_MEZ(r[1])[1])) : R.tipoQ(R.tipos[r[1]].toLowerCase());
+    }
+    const correcta = (r, i) => r[0] === 'comp' ? i === (r[1] + 6) % 12 : r[0] === 'mez' ? i === r[1] : RD_TIPO(i) === r[1];
+    function pintar(msg) {
+      box.innerHTML = `<div class="mix-head"><b>${R.titulo}</b>
+          <div class="mix-tabs" role="group">${R.modos.map((k, j) => `<button type="button" data-tab="${j}" class="${(j === 1) === enReto ? 'on' : ''}">${k}</button>`).join('')}</div></div>
+        ${enReto ? `<p class="mix-q">${ronda < retos.length ? pregunta() : R.fin(aciertos, retos.length)}</p>` :
+          `<div class="mix-tabs mix-modo" role="group">${Object.keys(R.filtros).map(k => `<button type="button" data-f="${k}" class="${k === filtro ? 'on' : ''}">${k === 'prim' ? '●●● ' : k === 'sec' ? '●● ' : k === 'ter' ? '● ' : ''}${R.filtros[k]}</button>`).join('')}</div>`}
+        <div class="rd-body">${svg()}<div>${enReto ? `<p class="mix-pt" aria-live="polite">${msg || ''} ${R.puntos(aciertos, retos.length)}</p>${ronda >= retos.length ? `<button type="button" class="mix-go" data-otra="1">${R.otra}</button>` : ''}` : info()}</div></div>`;
+      box.querySelectorAll('.rd-s').forEach(g => {
+        const go = () => {
+          const i = +g.dataset.i;
+          if (!enReto) { sel = i; sfx('burbuja'); pintar(); return; }
+          if (ronda >= retos.length) return;
+          if (correcta(retos[ronda], i)) { if (!fallo) aciertos++; fallo = false; ronda++; sfx('coin'); pintar(`<span class="ok">${R.bien}</span>`); }
+          else { fallo = true; sfx('metal'); pintar(`<span class="ko">${R.mal}</span>`); }
+        };
+        g.onclick = go; g.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } };
+      });
+      box.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { filtro = b.dataset.f; sfx('laser'); pintar(); });
+      box.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { const r = b.dataset.tab === '1'; if (r !== enReto) { enReto = r; if (r) empezar(); else pintar(); } });
+      const ot = box.querySelector('[data-otra]'); if (ot) ot.onclick = empezar;
+    }
+    function empezar() {
+      const mez = [1, 2, 3, 5, 6, 7, 9, 10, 11], todos = [];
+      for (let i = 0; i < 12; i++) todos.push(['comp', i]);
+      mez.forEach(i => todos.push(['mez', i]));
+      ['prim', 'sec', 'ter'].forEach(t => todos.push(['tipo', t]));
+      retos = todos.sort(() => Math.random() - .5).slice(0, 8); ronda = 0; aciertos = 0; fallo = false; pintar();
+    }
     pintar();
   }
 
@@ -698,6 +806,7 @@
 
   function init(root) {
     root.querySelectorAll('[data-mix]').forEach(montarJuego);
+    root.querySelectorAll('[data-rueda]').forEach(montarRueda);
     root.querySelectorAll('[data-arena]').forEach(montarArena);
     root.querySelectorAll('[data-fw="fb"]').forEach(montarFb);
     root.querySelectorAll('[data-fw="escala"]').forEach(montarEscala);
@@ -714,7 +823,7 @@
 .fig-b1 .b1-l path{stroke:#8a8592;stroke-width:1.5;fill:none}
 .fig-b1 .b1-zl{font-family:var(--marker);font-size:20px;fill:#f3efe6}
 .fig-b1 .b1-ps{font-size:11px;fill:#5c5866}
-.fig-b1,.dn-svg,.mix-svg,.ar-mini,.ar-bestia{direction:ltr}
+.fig-b1,.dn-svg,.mix-svg,.rd-svg,.rd-carta,.ar-mini,.ar-bestia{direction:ltr}
 [dir=rtl] .ar-campo{direction:ltr}
 .duo-b1{display:grid;grid-template-columns:minmax(200px,300px) 1fr;gap:22px;align-items:start}
 .duo-b1 ul{padding-left:18px;margin:.3em 0 .8em}
@@ -737,6 +846,11 @@
 .mix-p{font-size:14px;opacity:.85;margin:.2em 0}
 .mix-q{font-size:18px;margin:12px 0 4px}
 .mix-go{border-color:var(--c);color:var(--c);margin-top:4px}
+.rd-body{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;margin-top:8px}
+@media (max-width:640px){.rd-body{grid-template-columns:1fr}.rd-svg{max-width:300px;margin:auto}}
+.rd-svg{width:100%;display:block}.rd-s{cursor:pointer;transition:opacity .2s}.rd-s.off{opacity:.18}.rd-s:focus{outline:none}.rd-s:focus path{stroke:#fff;stroke-width:4}
+.rd-nom{display:flex;align-items:center;gap:8px;font-size:18px;margin:.2em 0 .4em}
+.rd-vib{display:flex;gap:12px;align-items:center;margin-top:8px}.rd-carta{width:96px;flex:none}
 .mix-pt{min-height:1.4em}.mix-pt .ok{color:var(--fluor)}.mix-pt .ko{color:#ff7a7a}
 .ar-fichas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0}
 @media (max-width:640px){.ar-fichas{grid-template-columns:1fr}}
@@ -849,7 +963,7 @@
       ]
     },
     ACT_IL: [['IL 3.1', 'IL 3.2', 'IL 3.3', 'IL 3.4'], ['IL 3.5', 'IL 3.6'], ['IL 3.7', 'IL 3.8', 'IL 3.9', 'IL 3.10', 'IL 3.11']],
-    figs: { carta: figCarta, pagina: figPagina, formas: figFormas, juego: figJuego, arena: figArena },
+    figs: { carta: figCarta, pagina: figPagina, formas: figFormas, juego: figJuego, arena: figArena, rueda: figRueda },
     init
   });
 })();
